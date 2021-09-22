@@ -1,34 +1,21 @@
-# codemix-vanilla-vue
+# frontend
 
-Template for project creation of Vue inside CodeMix
+> A Vue.js project
 
-# Contents
+## Build Setup
 
-This template project is just an example Hello World that guide you through the use of Vue to build a very simple web application that display the Hello World!!! Greeting.
-
-This example has been started with the vue-cli and webpack-simple
-
-# Project setup
-```
+``` bash
+# install dependencies
 npm install
-```
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+# serve with hot reload at localhost:8080
+npm run dev
 
-### Compiles and minifies for production
-```
+# build for production with minification
 npm run build
+
+# build for production and view the bundle analyzer report
+npm run build --report
 ```
 
-### Run your tests
-```
-npm run test
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
+For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
