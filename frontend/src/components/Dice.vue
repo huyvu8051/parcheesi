@@ -42,9 +42,13 @@
 </template>
 
 <script>
-// import dice from "../assets/js/dice";
-// import parcheesi from "../assets/js/parcheesi"
+import playerService from "@/services/Player/Player";
 export default {
+  pros: {
+    iDiced: Number,
+    isDiced: Boolean,
+    oCurrentPlayer: Object
+  },
   data() {
     return {
       msg: "Welcome to Your Vue.js App"
@@ -54,40 +58,37 @@ export default {
     console.log("con cu hay cung xin chao ca nha");
   },
   methods: {
-    rollDice() {
-      /* if (parcheesi.isDiced === true) {
-        parcheesi.tempAlert("NOT turn to dice!!!", "black", "red");
+    async rollDice() {
+      if (this.$attrs.isDiced === true) {
+        this.$eventBus.$emit("tempAlert", {
+          msg: "NOT turn to dice!!!",
+          color: "black",
+          background: "red"
+        });
         return;
-      } */
+      }
 
       var diceValue = 1;
       const dice = [...document.querySelectorAll(".die-list")];
+
+      var response = await playerService.getIDiced();
+      this.$eventBus.$emit("setIsDiced", true);
       dice.forEach(die => {
         this.toggleClasses(die);
-        die.dataset.roll = diceValue = this.getRandomNumber(1, 6);
+        // die.dataset.roll = diceValue = this.getRandomNumber(1, 6);
+        die.dataset.roll = diceValue = response.data;
       });
 
-      /* parcheesi.tempAlert(
-        parcheesi.oCurrentPlayer.color + " diced a " + diceValue,
-        parcheesi.oCurrentPlayer.color
-      ); */
-      /* setTimeout(function() {
-        parcheesi.iDiced = diceValue;
-        d3.select(".diced").text(parcheesi.iDiced);
-        parcheesi.isDiced = true;
+      var self = this;
+      setTimeout(function() {
+        self.$eventBus.$emit("tempAlert", {
+          msg: self.$attrs.oCurrentPlayer.color + " diced a " + diceValue,
+          color: self.$attrs.oCurrentPlayer.color
+        });
+        self.$eventBus.$emit("setIDiced", diceValue);
 
-        if (!parcheesi.isAbleToTakeTurn()) {
-          // check this currentplayer can do a turn, if not -> give turn to next player
-          parcheesi.tempAlert(
-            parcheesi.oCurrentPlayer.color +
-              " loses turn, the turn is given to next player!!!",
-            parcheesi.oCurrentPlayer.color
-          );
-          parcheesi.setNextPlayer();
-          parcheesi.dice();
-          return;
-        }
-      }, 500); */
+        self.$eventBus.$emit("isAbleToTakeTurn");
+      }, 500);
     },
 
     toggleClasses(die) {
