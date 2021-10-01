@@ -9,5 +9,11 @@ export default {
 			return Api().post('admin/category', credentials);
 		}
 		return Api().put('admin/category', credentials);
+	},
+	createGame(credentials) {
+		return Api().post("game",credentials);
+	},
+	action(credentials) {
+		return Api().post("action",credentials);
 	}
 }

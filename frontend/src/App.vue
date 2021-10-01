@@ -1,20 +1,18 @@
 <template>
-  <div id="app">
-    <!-- <img src="./assets/logo.png"> -->
-    <h1>con cu hay cung</h1>
-    <router-view/>
-  </div>
+  <v-app>
+    <router-view />
+  </v-app>
 </template>
 
 <script>
 export default {
-  name: 'App'
-}
+  name: "App"
+};
 </script>
 
 <style>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;

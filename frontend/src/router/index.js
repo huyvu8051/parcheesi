@@ -4,6 +4,8 @@ import HelloWorld from '@/components/HelloWorld'
 
 import Dice from '@/components/Dice'
 import Parcheesi from '@/components/Parcheesi'
+import Login from '@/views/Login'
+
 
 Vue.use(Router)
 
@@ -21,7 +23,13 @@ export default new Router({
     },
     {
       path: "/parcheesi",
+      name: "parcheesi",
       component: Parcheesi
+    },
+    {
+      path: "/login",
+      name: "login",
+      component: Login
     }
   ]
 })

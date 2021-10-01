@@ -7,6 +7,8 @@
 
 <script>
 import Dice from "./Dice";
+
+import PlayerService from "@/services/Game";
 export default {
   components: {
     Dice: Dice
@@ -16,392 +18,392 @@ export default {
       {
         x: 150,
         y: 50,
-        color: "red",
+        color: "RED",
         radius: 40,
         homepoint: 3
       },
       {
         x: 950,
         y: 50,
-        color: "blue",
+        color: "BLUE",
         radius: 40,
         homepoint: 1
       },
       {
         x: 50,
         y: 150,
-        color: "red",
+        color: "RED",
         radius: 40,
         homepoint: 1
       },
       {
         x: 150,
         y: 150,
-        color: "red",
+        color: "RED",
         radius: 40,
         homepoint: 2
       },
       {
         x: 450,
         y: 150,
-        color: "white",
+        color: "WHITE",
         radius: 40,
         waypoint: 30
       },
       {
         x: 550,
         y: 150,
-        color: "white",
+        color: "WHITE",
         radius: 40,
         waypoint: 31
       },
       {
         x: 650,
         y: 150,
-        color: "lightblue",
+        color: "LIGHTBLUE",
         radius: 40,
         waypoint: 0
       },
       {
         x: 950,
         y: 150,
-        color: "blue",
+        color: "BLUE",
         radius: 40,
         homepoint: 2
       },
       {
         x: 1050,
         y: 150,
-        color: "blue",
+        color: "BLUE",
         radius: 40,
         homepoint: 3
       },
       {
         x: 450,
         y: 250,
-        color: "white",
+        color: "WHITE",
         radius: 40,
         waypoint: 29
       },
       {
         x: 550,
         y: 250,
-        color: "blue",
+        color: "BLUE",
         radius: 40,
         finishpoint: 1
       },
       {
         x: 650,
         y: 250,
-        color: "white",
+        color: "WHITE",
         radius: 40,
         waypoint: 1
       },
       {
         x: 450,
         y: 350,
-        color: "white",
+        color: "WHITE",
         radius: 40,
         waypoint: 28
       },
       {
         x: 550,
         y: 350,
-        color: "blue",
+        color: "BLUE",
         radius: 40,
         finishpoint: 2
       },
       {
         x: 650,
         y: 350,
-        color: "white",
+        color: "WHITE",
         radius: 40,
         waypoint: 2
       },
       {
         x: 150,
         y: 450,
-        color: "salmon",
+        color: "SALMON",
         radius: 40,
         waypoint: 24
       },
       {
         x: 250,
         y: 450,
-        color: "white",
+        color: "WHITE",
         radius: 40,
         waypoint: 25
       },
       {
         x: 350,
         y: 450,
-        color: "white",
+        color: "WHITE",
         radius: 40,
         waypoint: 26
       },
       {
         x: 450,
         y: 450,
-        color: "white",
+        color: "WHITE",
         radius: 40,
         waypoint: 27
       },
       {
         x: 550,
         y: 450,
-        color: "blue",
+        color: "BLUE",
         radius: 40,
         finishpoint: 3
       },
       {
         x: 650,
         y: 450,
-        color: "white",
+        color: "WHITE",
         radius: 40,
         waypoint: 3
       },
       {
         x: 750,
         y: 450,
-        color: "white",
+        color: "WHITE",
         radius: 40,
         waypoint: 4
       },
       {
         x: 850,
         y: 450,
-        color: "white",
+        color: "WHITE",
         radius: 40,
         waypoint: 5
       },
       {
         x: 950,
         y: 450,
-        color: "white",
+        color: "WHITE",
         radius: 40,
         waypoint: 6
       },
       {
         x: 150,
         y: 550,
-        color: "white",
+        color: "WHITE",
         radius: 40,
         waypoint: 23
       },
       {
         x: 250,
         y: 550,
-        color: "red",
+        color: "RED",
         radius: 40,
         finishpoint: 1
       },
       {
         x: 350,
         y: 550,
-        color: "red",
+        color: "RED",
         radius: 40,
         finishpoint: 2
       },
       {
         x: 450,
         y: 550,
-        color: "red",
+        color: "RED",
         radius: 40,
         finishpoint: 3
       },
       {
         x: 650,
         y: 550,
-        color: "green",
+        color: "GREEN",
         radius: 40,
         finishpoint: 3
       },
       {
         x: 750,
         y: 550,
-        color: "green",
+        color: "GREEN",
         radius: 40,
         finishpoint: 2
       },
       {
         x: 850,
         y: 550,
-        color: "green",
+        color: "GREEN",
         radius: 40,
         finishpoint: 1
       },
       {
         x: 950,
         y: 550,
-        color: "white",
+        color: "WHITE",
         radius: 40,
         waypoint: 7
       },
       {
         x: 150,
         y: 650,
-        color: "white",
+        color: "WHITE",
         radius: 40,
         waypoint: 22
       },
       {
         x: 250,
         y: 650,
-        color: "white",
+        color: "WHITE",
         radius: 40,
         waypoint: 21
       },
       {
         x: 350,
         y: 650,
-        color: "white",
+        color: "WHITE",
         radius: 40,
         waypoint: 20
       },
       {
         x: 450,
         y: 650,
-        color: "white",
+        color: "WHITE",
         radius: 40,
         waypoint: 19
       },
       {
         x: 550,
         y: 650,
-        color: "yellow",
+        color: "YELLOW",
         radius: 40,
         finishpoint: 3
       },
       {
         x: 650,
         y: 650,
-        color: "white",
+        color: "WHITE",
         radius: 40,
         waypoint: 11
       },
       {
         x: 750,
         y: 650,
-        color: "white",
+        color: "WHITE",
         radius: 40,
         waypoint: 10
       },
       {
         x: 850,
         y: 650,
-        color: "white",
+        color: "WHITE",
         radius: 40,
         waypoint: 9
       },
       {
         x: 950,
         y: 650,
-        color: "lightgreen",
+        color: "LIGHTGREEN",
         radius: 40,
         waypoint: 8
       },
       {
         x: 450,
         y: 750,
-        color: "white",
+        color: "WHITE",
         radius: 40,
         waypoint: 18
       },
       {
         x: 550,
         y: 750,
-        color: "yellow",
+        color: "YELLOW",
         radius: 40,
         finishpoint: 2
       },
       {
         x: 650,
         y: 750,
-        color: "white",
+        color: "WHITE",
         radius: 40,
         waypoint: 12
       },
       {
         x: 450,
         y: 850,
-        color: "white",
+        color: "WHITE",
         radius: 40,
         waypoint: 17
       },
       {
         x: 550,
         y: 850,
-        color: "yellow",
+        color: "YELLOW",
         radius: 40,
         finishpoint: 1
       },
       {
         x: 650,
         y: 850,
-        color: "white",
+        color: "WHITE",
         radius: 40,
         waypoint: 13
       },
       {
         x: 50,
         y: 950,
-        color: "yellow",
+        color: "YELLOW",
         radius: 40,
         homepoint: 3
       },
       {
         x: 150,
         y: 950,
-        color: "yellow",
+        color: "YELLOW",
         radius: 40,
         homepoint: 2
       },
       {
         x: 450,
         y: 950,
-        color: "lightyellow",
+        color: "LIGHTYELLOW",
         radius: 40,
         waypoint: 16
       },
       {
         x: 550,
         y: 950,
-        color: "white",
+        color: "WHITE",
         radius: 40,
         waypoint: 15
       },
       {
         x: 650,
         y: 950,
-        color: "white",
+        color: "WHITE",
         radius: 40,
         waypoint: 14
       },
       {
         x: 950,
         y: 950,
-        color: "green",
+        color: "GREEN",
         radius: 40,
         homepoint: 2
       },
       {
         x: 1050,
         y: 950,
-        color: "green",
+        color: "GREEN",
         radius: 40,
         homepoint: 1
       },
       {
         x: 150,
         y: 1050,
-        color: "yellow",
+        color: "YELLOW",
         radius: 40,
         homepoint: 1
       },
       {
         x: 950,
         y: 1050,
-        color: "green",
+        color: "GREEN",
         radius: 40,
         homepoint: 3
       }
@@ -410,7 +412,7 @@ export default {
       {
         x: 50,
         y: 150,
-        color: "red",
+        color: "RED",
         identifier: "token3",
         radius: 30,
         fieldtype: "homepoint",
@@ -419,7 +421,7 @@ export default {
       {
         x: 150,
         y: 150,
-        color: "red",
+        color: "RED",
         identifier: "token2",
         radius: 30,
         fieldtype: "homepoint",
@@ -428,7 +430,7 @@ export default {
       {
         x: 150,
         y: 50,
-        color: "red",
+        color: "RED",
         identifier: "token1",
         radius: 30,
         fieldtype: "homepoint",
@@ -437,7 +439,7 @@ export default {
       {
         x: 1050,
         y: 150,
-        color: "blue",
+        color: "BLUE",
         identifier: "token3",
         radius: 30,
         fieldtype: "homepoint",
@@ -446,7 +448,7 @@ export default {
       {
         x: 950,
         y: 50,
-        color: "blue",
+        color: "BLUE",
         identifier: "token1",
         radius: 30,
         fieldtype: "homepoint",
@@ -455,7 +457,7 @@ export default {
       {
         x: 950,
         y: 150,
-        color: "blue",
+        color: "BLUE",
         identifier: "token2",
         radius: 30,
         fieldtype: "homepoint",
@@ -464,7 +466,7 @@ export default {
       {
         x: 50,
         y: 950,
-        color: "yellow",
+        color: "YELLOW",
         identifier: "token3",
         radius: 30,
         fieldtype: "homepoint",
@@ -473,7 +475,7 @@ export default {
       {
         x: 150,
         y: 950,
-        color: "yellow",
+        color: "YELLOW",
         identifier: "token2",
         radius: 30,
         fieldtype: "homepoint",
@@ -482,7 +484,7 @@ export default {
       {
         x: 150,
         y: 1050,
-        color: "yellow",
+        color: "YELLOW",
         identifier: "token1",
         radius: 30,
         fieldtype: "homepoint",
@@ -491,7 +493,7 @@ export default {
       {
         x: 950,
         y: 950,
-        color: "green",
+        color: "GREEN",
         identifier: "token2",
         radius: 30,
         fieldtype: "homepoint",
@@ -500,7 +502,7 @@ export default {
       {
         x: 950,
         y: 1050,
-        color: "green",
+        color: "GREEN",
         identifier: "token3",
         radius: 30,
         fieldtype: "homepoint",
@@ -509,7 +511,7 @@ export default {
       {
         x: 1050,
         y: 950,
-        color: "green",
+        color: "GREEN",
         identifier: "token1",
         radius: 30,
         fieldtype: "homepoint",
@@ -517,37 +519,37 @@ export default {
       }
     ],
     oEntryPoints: {
-      red: 24,
-      blue: 0,
-      yellow: 16,
-      green: 8
+      RED: 24,
+      BLUE: 0,
+      YELLOW: 16,
+      GREEN: 8
     },
     oFinishZonePoint: {
-      red: 23,
-      blue: 31,
-      yellow: 15,
-      green: 7
+      RED: 23,
+      BLUE: 31,
+      YELLOW: 15,
+      GREEN: 7
     },
 
     oColors: {
-      red: "red",
-      blue: "blue",
-      green: "green",
-      yellow: "yellow"
+      RED: "RED",
+      BLUE: "BLUE",
+      GREEN: "GREEN",
+      YELLOW: "YELLOW"
     },
 
     oFieldTypes: {
-      waypoint: "waypoint",
-      homepoint: "homepoint",
-      finishpoint: "finishpoint"
+      waypoint: "WAYPOINT",
+      homepoint: "HOMEPOINT",
+      finishpoint: "FINISHPOINT"
     },
     aWaypoints: new Array(32),
 
     oFinishPoints: {
-      red: new Array(3),
-      blue: new Array(3),
-      green: new Array(3),
-      yellow: new Array(3)
+      RED: new Array(3),
+      BLUE: new Array(3),
+      GREEN: new Array(3),
+      YELLOW: new Array(3)
     },
 
     oPlayers: {},
@@ -557,7 +559,7 @@ export default {
     isDiced: false
   }),
   // end data
-  created() {
+  async created() {
     this.$eventBus.$on("setIDiced", data => {
       this.iDiced = data;
       d3.select(".diced").text(this.iDiced);
@@ -589,12 +591,26 @@ export default {
       }
     });
   },
-  mounted() {
-    this.init();
-    this.create();
+  async mounted() {
+    this.start();
   },
 
   methods: {
+    async start() {
+      await this.createGame();
+      await this.init();
+      await this.create();
+    },
+    async createGame() {
+      var response = await PlayerService.createGame({
+        name: "concu"
+      });
+
+      this.aTokenData = response.data.tokens;
+
+      console.log(response);
+    },
+
     getWaypoint(iWaypoint) {
       return this.aWaypoints[iWaypoint];
     },
@@ -610,21 +626,21 @@ export default {
         next: {}
       };
       this.oPlayers = {
-        blue: Object.create(player),
-        red: Object.create(player),
-        yellow: Object.create(player),
-        green: Object.create(player)
+        BLUE: Object.create(player),
+        RED: Object.create(player),
+        YELLOW: Object.create(player),
+        GREEN: Object.create(player)
       };
-      this.oPlayers.blue.color = this.oColors.blue;
-      this.oPlayers.blue.next = this.oPlayers.green;
-      this.oPlayers.green.color = this.oColors.green;
-      this.oPlayers.green.next = this.oPlayers.yellow;
-      this.oPlayers.yellow.color = this.oColors.yellow;
-      this.oPlayers.yellow.next = this.oPlayers.red;
-      this.oPlayers.red.color = this.oColors.red;
-      this.oPlayers.red.next = this.oPlayers.blue;
+      this.oPlayers.BLUE.color = this.oColors.BLUE;
+      this.oPlayers.BLUE.next = this.oPlayers.GREEN;
+      this.oPlayers.GREEN.color = this.oColors.GREEN;
+      this.oPlayers.GREEN.next = this.oPlayers.YELLOW;
+      this.oPlayers.YELLOW.color = this.oColors.YELLOW;
+      this.oPlayers.YELLOW.next = this.oPlayers.RED;
+      this.oPlayers.RED.color = this.oColors.RED;
+      this.oPlayers.RED.next = this.oPlayers.BLUE;
 
-      this.oCurrentPlayer = this.oPlayers.blue;
+      this.oCurrentPlayer = this.oPlayers.BLUE;
 
       this.dice();
       d3.select(".currentplayer").text(this.oCurrentPlayer.color);
@@ -657,7 +673,10 @@ export default {
     // move token from homepoint to entry point
     entryMove(oToken) {
       var datum = d3
-        .select(".gamefield.waypoint.point" + this.oEntryPoints[oToken.color])
+        .select(
+          ".gamefield.waypoint.point" +
+            this.oEntryPoints[oToken.color]
+        )
         .datum();
 
       if (this._waypointIsFree(oToken)) {
@@ -672,7 +691,7 @@ export default {
       this.tempAlert(
         oToken.color + " horse cann't comes out from home point!!!",
         "black",
-        "red"
+        "RED"
       );
     },
     isSpecialDice() {
@@ -700,7 +719,7 @@ export default {
                 token.color +
                 " horse!!!",
               "black",
-              "red"
+              "RED"
             );
             return false;
           }
@@ -726,7 +745,7 @@ export default {
               oToken.color +
               " horse!!!",
             this.oCurrentPlayer.color,
-            "white"
+            "WHITE"
           );
           this.strike(token);
         }
@@ -777,7 +796,7 @@ export default {
               this.iDiced +
               "!!!",
             "black",
-            "red"
+            "RED"
           );
         }
       } else {
@@ -786,7 +805,7 @@ export default {
           this.tempAlert(
             "This " + oToken.color + " horse cann't go more than one round!!!",
             "black",
-            "red"
+            "RED"
           );
           return;
         }
@@ -844,6 +863,22 @@ export default {
       }
     },
     jump(oToken, oDestination) {
+      if (oDestination.waypoint !== undefined) {
+        oDestination.fieldnumber = oDestination.waypoint;
+        oDestination.fieldtype = "WAYPOINT";
+      }
+      if (oDestination.homepoint !== undefined) {
+        oDestination.fieldnumber = oDestination.homepoint;
+        oDestination.fieldtype = "HOMEPOINT";
+      }
+      if (oDestination.finishpoint !== undefined) {
+        oDestination.fieldnumber = oDestination.finishpoint;
+        oDestination.fieldtype = "FINISHPOINT";
+      }
+      var response = PlayerService.action({
+        token: oToken,
+        destination: oDestination
+      });
       var datum = oDestination;
       if (datum.waypoint !== undefined) {
         this.tempAlert(
@@ -942,7 +977,7 @@ export default {
       if (!this._isProperPlayer(oToken)) {
         // is your turn ?
 
-        this.tempAlert("Not " + oToken.color + " turn!!!", "black", "red");
+        this.tempAlert("Not " + oToken.color + " turn!!!", "black", "RED");
         return;
       }
       if (!this.isDiced) {
@@ -950,7 +985,7 @@ export default {
         this.tempAlert(
           "Dice first to make a " + oToken.color + " turn!!!",
           "black",
-          "red"
+          "RED"
         );
         return;
       }
@@ -961,7 +996,7 @@ export default {
           this.tempAlert(
             "This " + oToken.color + " dont have special dice!!!",
             "black",
-            "red"
+            "RED"
           );
           return;
         }
@@ -1000,7 +1035,7 @@ export default {
             this.iDiced +
             "!!!",
           "black",
-          "red"
+          "RED"
         );
         return;
       }
@@ -1026,7 +1061,7 @@ export default {
         msg: this.oCurrentPlayer.color + " is current player!!!",
         color: this.oCurrentPlayer.color
       });
-      // this.oCurrentPlayer = {color: "green"};
+      // this.oCurrentPlayer = {color: "GREEN"};
       d3.select(".currentplayer").text(this.oCurrentPlayer.color);
       d3.select(".diced").text("?");
       return this.oCurrentPlayer;
@@ -1094,25 +1129,25 @@ export default {
       return false;
     },
     getWinner() {
-      var red = 0,
-        blue = 0,
-        green = 0,
-        yellow = 0;
+      var RED = 0,
+        BLUE = 0,
+        GREEN = 0,
+        YELLOW = 0;
 
       d3.selectAll(".token").each((d, i) => {
         if (d.fieldtype === this.oFieldTypes.finishpoint) {
           switch (d.color) {
-            case this.oColors.red:
-              red++;
+            case this.oColors.RED:
+              RED++;
               break;
-            case this.oColors.blue:
-              blue++;
+            case this.oColors.BLUE:
+              BLUE++;
               break;
-            case this.oColors.green:
-              green++;
+            case this.oColors.GREEN:
+              GREEN++;
               break;
-            case this.oColors.yellow:
-              yellow++;
+            case this.oColors.YELLOW:
+              YELLOW++;
               break;
             default:
               break;
@@ -1120,10 +1155,10 @@ export default {
         }
       });
 
-      if (red === 3) return this.oColors.red;
-      if (blue === 3) return this.oColors.blue;
-      if (green === 3) return this.oColors.green;
-      if (yellow === 3) return this.oColors.yellow;
+      if (RED === 3) return this.oColors.RED;
+      if (BLUE === 3) return this.oColors.BLUE;
+      if (GREEN === 3) return this.oColors.GREEN;
+      if (YELLOW === 3) return this.oColors.YELLOW;
 
       return null;
     },
@@ -1152,7 +1187,7 @@ export default {
       header
         .append("div")
         .attr("class", "currentplayer")
-        .text("blue");
+        .text("BLUE");
       header
         .append("div")
         .attr("class", "diced")

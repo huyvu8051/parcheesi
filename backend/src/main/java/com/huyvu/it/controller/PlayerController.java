@@ -1,18 +1,45 @@
 package com.huyvu.it.controller;
 
-import java.util.concurrent.ThreadLocalRandom;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.huyvu.it.dto.GameDto;
+import com.huyvu.it.dto.MoveDto;
+import com.huyvu.it.service.GameService;
 
 @RestController
 public class PlayerController {
+	@Autowired
+	private GameService gameService;
 	@GetMapping("/dice")
-	@CrossOrigin(origins = "http://localhost:8080")
-	public ResponseEntity<Integer> getIDiced() {
-		int randomNumber =  ThreadLocalRandom.current().nextInt(1, 6 + 1);
-		return ResponseEntity.ok(randomNumber);
+	public ResponseEntity<Object> getIDiced() {
+		try {
+			
+			UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
+					.getPrincipal();
+			GameDto gameDto = gameService.dice(userDetails);
+			return ResponseEntity.ok(gameDto);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+		}
+	}
+	@PostMapping("/action")
+	public ResponseEntity<Object> move(@RequestBody MoveDto moveDto){
+		try {
+			UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
+					.getPrincipal();
+			MoveDto response = gameService.action(moveDto, userDetails);
+			return ResponseEntity.ok(response);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+		}
+		
 	}
 }
