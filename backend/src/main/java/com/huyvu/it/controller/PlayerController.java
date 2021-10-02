@@ -1,5 +1,8 @@
 package com.huyvu.it.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,35 +14,40 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.huyvu.it.dto.GameDto;
-import com.huyvu.it.dto.MoveDto;
-import com.huyvu.it.service.GameService;
+import com.huyvu.it.models.Player;
+import com.huyvu.it.service.HostService;
+import com.huyvu.it.service.PlayerService;
 
 @RestController
 public class PlayerController {
+
 	@Autowired
-	private GameService gameService;
-	@GetMapping("/dice")
-	public ResponseEntity<Object> getIDiced() {
+	private HostService hostService;
+
+	@Autowired
+	private PlayerService playerService;
+
+	@GetMapping("/game")
+	public List<GameDto> getAllRoom() {
 		try {
-			
-			UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
-					.getPrincipal();
-			GameDto gameDto = gameService.dice(userDetails);
-			return ResponseEntity.ok(gameDto);
+			return playerService.findAllGame();
 		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+			return new ArrayList<>();
 		}
 	}
-	@PostMapping("/action")
-	public ResponseEntity<Object> move(@RequestBody MoveDto moveDto){
+
+	@PostMapping("/game")
+	public ResponseEntity<GameDto> createNewGame(@RequestBody GameDto gameDto) {
+
 		try {
 			UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
 					.getPrincipal();
-			MoveDto response = gameService.action(moveDto, userDetails);
-			return ResponseEntity.ok(response);
+
+			return ResponseEntity.ok(
+					hostService.createGame(gameDto, new Player(userDetails.getUsername(), userDetails.getPassword())));
 		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+			return ResponseEntity.internalServerError().build();
 		}
-		
+
 	}
 }

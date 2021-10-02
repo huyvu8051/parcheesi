@@ -95,20 +95,19 @@ public class GameService {
 		// TODO Auto-generated method stub
 
 	}
+
 	// if the entry point is free, token can move to it
 	private void entryMove(Token token) throws Exception {
-		
+
 		Field field = EntryPoint.class.getField(token.getColor().toString());
 		Token entryPoint = (Token) field.get(Token.class);
-		
+
 		if (anAllyStandInDestination(entryPoint)) {
 			throw new Exception("Your way point has been block!");
 		}
-		
+
 		jump(token, entryPoint);
 	}
-
-
 
 	private void jump(Token token, Token destination) {
 		System.out.println("just jump!");
@@ -129,11 +128,12 @@ public class GameService {
 	private boolean anAllyStandInDestination(Token token) {
 		List<Token> tokens = tokenRepository.findAllByGameId(game.getId());
 
-		List<Token> allys = tokens.stream().filter(e -> e.getFieldtype().equals(token.getFieldtype())
-				&& e.getFieldNumber() == token.getFieldNumber() 
-				&& e.getColor().equals(token.getColor())).collect(Collectors.toList());
-		
-		if(allys.size() > 0) {
+		List<Token> allys = tokens.stream()
+				.filter(e -> e.getFieldtype().equals(token.getFieldtype())
+						&& e.getFieldNumber() == token.getFieldNumber() && e.getColor().equals(token.getColor()))
+				.collect(Collectors.toList());
+
+		if (allys.size() > 0) {
 			return true;
 		}
 
@@ -142,9 +142,7 @@ public class GameService {
 
 	private boolean waypointIsFree(Token token) {
 		List<Token> tokens = game.getTokens();
-		
-		
-		
+
 		return false;
 	}
 
@@ -183,14 +181,34 @@ public class GameService {
 		}
 
 		int newDiceValue = ThreadLocalRandom.current().nextInt(1, 6 + 1);
-		newDiceValue = 1;
+		// newDiceValue = 1;
 		game.setDiceValue(newDiceValue);
 		// game.setDiced(true);
 		gameRepository.save(game);
 
-		GameDto result = gameConverter.toCreateGameDto(game);
+		GameDto result = gameConverter.toDto(game);
 
 		return result;
+	}
+
+	public GameDto loadGame(GameDto gameDto, UserDetails userDetails) throws Exception {
+
+		if (!isPlayerJoinedGame(gameDto.getId(), userDetails.getUsername())) {
+			throw new Exception("You not in this game!");
+		}
+
+		Game game = gameRepository.findOneById(gameDto.getId());
+
+		GameDto result = gameConverter.toDto(game);
+
+		return result;
+	}
+
+	private boolean isPlayerJoinedGame(int id, String username) {
+		Player player = playerRepository.findOneByUsername(username);
+		Game game = gameRepository.findOneById(id);
+		List<PlayerGame> players = game.getPlayerGames();
+		return players.stream().anyMatch(e -> e.getPlayer().getId() == player.getId());
 	}
 
 }

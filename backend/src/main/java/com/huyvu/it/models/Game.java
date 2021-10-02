@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -13,6 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,6 +24,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@EntityListeners({AuditingEntityListener.class})
 public class Game {
 	@Id
 	@GeneratedValue
@@ -32,6 +35,10 @@ public class Game {
 	private int diceValue;
 	
 	private boolean isDiced;
+	
+	@ManyToOne
+	@JoinColumn(name = "currentPlayer_id")
+	private Player currentPlayer;
 	
 	@CreatedDate
 	private Date createdDate;

@@ -48,7 +48,10 @@ public class DataLoader implements ApplicationRunner {
 
 
 
-		Game game = gameRepository.save(new Game("Game 1", Status.WAITTING, player1));
+		Game game = gameRepository.save(new Game("Game 1", Status.WAITING, player1));
+		Game game2 = gameRepository.save(new Game("Game 2", Status.IN_PROGRESS, player2));
+		Game game3 = gameRepository.save(new Game("Game 3", Status.CLOSED, player3));
+		Game game4 = gameRepository.save(new Game("Game 4", Status.WAITING, player4));
 
 		List<PlayerGame> playerGames = new ArrayList<>();
 		playerGames.add(new PlayerGame(player1, game, false));

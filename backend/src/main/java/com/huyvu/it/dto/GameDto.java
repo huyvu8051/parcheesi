@@ -1,8 +1,8 @@
 package com.huyvu.it.dto;
 
+import java.util.Date;
 import java.util.List;
 
-import com.huyvu.it.models.Player;
 import com.huyvu.it.models.Status;
 
 import lombok.AllArgsConstructor;
@@ -18,10 +18,11 @@ public class GameDto {
 	private Status status;
 	private int diceValue;
 	private boolean isDiced;
-	private Player host;
+	private PlayerDto host;
+	private Date createdDate;
 
-	// private List<PlayerGame> playerGames;
-	
+	private List<PlayerDto> players;
+
 	private List<TokenDto> tokens;
 
 }

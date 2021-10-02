@@ -1,10 +1,10 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import HelloWorld from '@/components/HelloWorld'
 
 import Dice from '@/components/Dice'
 import Parcheesi from '@/components/Parcheesi'
-import Login from '@/views/Login'
+import Login from '@/components/Login'
+import ListGame from '@/components/ListGame'
 
 
 Vue.use(Router)
@@ -14,8 +14,14 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'HelloWorld',
-      component: HelloWorld
+      name: "login",
+      component: Login
+    }
+    ,
+    {
+      path: '/game',
+      name: "game",
+      component: ListGame
     },
     {
       path: '/dice',
@@ -25,11 +31,6 @@ export default new Router({
       path: "/parcheesi",
       name: "parcheesi",
       component: Parcheesi
-    },
-    {
-      path: "/login",
-      name: "login",
-      component: Login
     }
   ]
 })

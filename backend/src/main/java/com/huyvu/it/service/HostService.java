@@ -42,7 +42,7 @@ public class HostService {
 		host = playerRepository.findOneByUsername(host.getUsername());
 
 		// create game
-		Game game = gameRepository.save(new Game(gameDto.getName(), Status.WAITTING, host));
+		Game game = gameRepository.save(new Game(gameDto.getName(), Status.WAITING, host));
 
 		// add player host to game
 		playerGameRepository.save(new PlayerGame(host, game, true));
@@ -57,7 +57,7 @@ public class HostService {
 
 		game2.setTokens(tokens);
 		
-		GameDto result = gameConverter.toCreateGameDto(game2);
+		GameDto result = gameConverter.toDto(game2);
 
 		return result;
 	}

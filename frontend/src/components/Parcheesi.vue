@@ -1,8 +1,12 @@
 <template>
-  <div>
-    <Dice :isDiced="this.isDiced" :iDiced="this.iDiced" :oCurrentPlayer="this.oCurrentPlayer" />
-    <div id="table">chung ta cua hien tai</div>
-  </div>
+  <v-container fluid fill-height>
+    <v-layout align-center justify-center>
+      <v-flex xs12 sm12 md8>
+        <Dice :isDiced="this.isDiced" :iDiced="this.iDiced" :oCurrentPlayer="this.oCurrentPlayer" />
+        <div id="table"/>
+      </v-flex>
+    </v-layout>
+  </v-container>
 </template>
 
 <script>
@@ -592,23 +596,29 @@ export default {
     });
   },
   async mounted() {
-    this.start();
+      this.start(); 
   },
 
   methods: {
     async start() {
-      await this.createGame();
+      await this.loadGame();
       await this.init();
       await this.create();
     },
-    async createGame() {
-      var response = await PlayerService.createGame({
-        name: "concu"
+    async loadGame() {
+      try{
+        console.log(this.$route.params.game);
+      console.log(this.$route.query.gameId);
+
+      var response = await PlayerService.loadGame({
+        id: this.$route.query.gameId
       });
 
       this.aTokenData = response.data.tokens;
-
       console.log(response);
+      }catch(e){
+        console.log(e);
+      }
     },
 
     getWaypoint(iWaypoint) {
