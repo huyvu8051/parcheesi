@@ -15,7 +15,7 @@ public class TokenDto {
 	private Color color;
 	private int fieldnumber;
 	private FieldType fieldtype;
-	private String identifier;
+	private Color identifier;
 	private int radius;
 	private int x;
 	private int y;

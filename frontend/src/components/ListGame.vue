@@ -28,9 +28,9 @@
               <v-icon right>unpublished</v-icon>
             </v-chip>
           </template>
-          <template v-slot:[`item.createdDate`]="{ item }">
-            {{formatDate(item.createdDate)}}
-          </template> 
+          <template
+            v-slot:[`item.createdDate`]="{ item }"
+          >{{formatDate(item.createdDate)}}</template>
           <template v-slot:top>
             <v-toolbar flat>
               <v-toolbar-title>LIST GAME</v-toolbar-title>
@@ -111,9 +111,9 @@ export default {
       { text: "Name", value: "name" },
       { text: "Host", value: "host.username" },
       { text: "Created date", value: "createdDate" },
-      { text: "Players", value: "players.length"},
+      { text: "Players", value: "players.length" },
       { text: "Status", value: "status" },
-      { text: "Actions", value: "actions", sortable: false}
+      { text: "Actions", value: "actions", sortable: false }
     ],
     desserts: [],
     editedItem: {
@@ -177,7 +177,7 @@ export default {
     async save() {
       try {
         var response = await PlayerService.createGame({
-           name: this.editedItem.name
+          name: this.editedItem.name
         });
         console.log("Create " + response.data.name, response.data.id);
         this.$router.push({
@@ -189,12 +189,30 @@ export default {
         console.log(error);
       }
       this.close();
-      
-      
     },
     // play an available game
-    playConfirm() {
+    async playConfirm() {
       console.log("Play " + this.editedItem.id);
+      
+      // join a game
+
+      try {
+        var response = await PlayerService.join({
+          id: this.editedItem.id
+        });
+        var gameId = response.data.id;
+        this.$router.push({
+          name: "parcheesi",
+          params: { game: response.data },
+          query: { gameId: response.data.id }
+        });
+      } catch (error) {
+        console.log("Cannot join this room!")
+      }
+      
+
+
+
       this.dialogPlay = false;
       this.$nextTick(() => {
         this.editedItem = Object.assign({}, this.defaultItem);
@@ -207,7 +225,7 @@ export default {
       this.editedItem = Object.assign({}, item);
       this.dialogPlay = true;
     },
-    formatDate(s){
+    formatDate(s) {
       var date = new Date(s);
       return date.toLocaleString();
     }

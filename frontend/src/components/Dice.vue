@@ -55,52 +55,26 @@ export default {
     };
   },
   created: function() {
-    console.log("con cu hay cung xin chao ca nha");
+    this.$eventBus.$on("dice", diceValue => {
+      const dice = [...document.querySelectorAll(".die-list")];
+      dice.forEach(die => {
+        this.toggleClasses(die);
+        die.dataset.roll = diceValue;
+      });
+    });
   },
   methods: {
     async rollDice() {
-      if (this.$attrs.isDiced === true) {
-        this.$eventBus.$emit("tempAlert", {
-          msg: "NOT turn to dice!!!",
-          color: "black",
-          background: "red"
-        });
-        return;
-      }
-
       var diceValue = 1;
       const dice = [...document.querySelectorAll(".die-list")];
 
       var response = await playerService.getIDiced();
-      this.$eventBus.$emit("setIsDiced", true);
-      dice.forEach(die => {
-        this.toggleClasses(die);
-        // die.dataset.roll = diceValue = this.getRandomNumber(1, 6);
-        die.dataset.roll = diceValue = response.data.diceValue;
-      });
-
-      var self = this;
-      setTimeout(function() {
-        self.$eventBus.$emit("tempAlert", {
-          msg: self.$attrs.oCurrentPlayer.color + " diced a " + diceValue,
-          color: self.$attrs.oCurrentPlayer.color
-        });
-        self.$eventBus.$emit("setIDiced", diceValue);
-
-        self.$eventBus.$emit("isAbleToTakeTurn");
-      }, 500);
     },
 
     toggleClasses(die) {
       die.classList.toggle("odd-roll");
       die.classList.toggle("even-roll");
     },
-
-    getRandomNumber(min, max) {
-      min = Math.ceil(min);
-      max = Math.floor(max);
-      return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
   }
 };
 </script>
