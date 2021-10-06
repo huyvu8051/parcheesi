@@ -28,7 +28,7 @@ public class TokenConverter {
 	public List<TokenDto> toListDto(List<Token> tokens) {
 		List<TokenDto> listDto = new ArrayList<>();
 
-		tokens.parallelStream().forEach(element -> {
+		tokens.stream().forEach(element -> {
 			listDto.add(toDto(element));
 		});
 

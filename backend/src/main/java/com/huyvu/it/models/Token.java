@@ -21,7 +21,8 @@ public class Token {
 	private Color color;
 	private int fieldNumber;
 	private FieldType fieldtype;
-	private String identifier;
+	private Color identifier;
+	private int homeFieldnumber;
 	private int radius;
 	private int x;
 	private int y;
@@ -30,11 +31,12 @@ public class Token {
 	@JoinColumn(name = "game_id")
 	private Game game;
 	
-	public Token(Color color, int fieldNumber, FieldType fieldtype, String identifier, int radius, int x, int y, Game game) {
+	public Token(Color color, int fieldNumber, FieldType fieldtype, Color identifier, int homeFieldnumber, int radius, int x, int y, Game game) {
 		this.color = color;
 		this.fieldNumber = fieldNumber;
 		this.fieldtype = fieldtype;
 		this.identifier = identifier;
+		this.homeFieldnumber = homeFieldnumber;
 		this.radius = radius;
 		this.x = x;
 		this.y = y;
