@@ -17,7 +17,6 @@ export default {
 		return Api().post("action",credentials);
 	},
 	loadGame(credentials) {
-		var response = Api().post("parcheesi", credentials);
-		return response;
+		return Api().post("parcheesi", credentials);
 	}
 }

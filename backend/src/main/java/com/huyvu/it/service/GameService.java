@@ -11,11 +11,10 @@ import org.springframework.stereotype.Service;
 
 import com.huyvu.it.converter.GameConverter;
 import com.huyvu.it.converter.TokenConverter;
-import com.huyvu.it.dto.ActionResponseDto;
 import com.huyvu.it.dto.GameDto;
+import com.huyvu.it.dto.MoveDto;
 import com.huyvu.it.dto.TokenDto;
 import com.huyvu.it.models.EntryPoint;
-import com.huyvu.it.models.FieldType;
 import com.huyvu.it.models.Game;
 import com.huyvu.it.models.Player;
 import com.huyvu.it.models.PlayerGame;
@@ -47,12 +46,9 @@ public class GameService {
 	private GameConverter gameConverter;
 
 	private Game game;
-	
-	private ActionResponseDto actionResponseDto;
 
-	public GameDto action(TokenDto tokenDto, UserDetails userDetails) throws Exception {
-		actionResponseDto = new ActionResponseDto();
-		Token token = tokenRepository.findOneById(tokenDto.getId());
+	public MoveDto action(MoveDto moveDto, UserDetails userDetails) throws Exception {
+		Token token = tokenRepository.findOneById(moveDto.getToken().getId());
 		game = gameRepository.findOneById(token.getGame().getId());
 
 		Player player = playerRepository.findOneByUsername(userDetails.getUsername());
@@ -72,8 +68,7 @@ public class GameService {
 			break;
 		case HOMEPOINT:
 			if (!isSpecialDiceValue(game)) {
-				// throw new Exception("Player " + player.getUsername() + " don't have special
-				// dice value!");
+				throw new Exception("Player " + player.getUsername() + " don't have special dice value!");
 			}
 			entryMove(token);
 			break;
@@ -88,10 +83,8 @@ public class GameService {
 		// jump
 		game.setDiced(false);
 		gameRepository.save(game);
-		
-		GameDto result = gameConverter.toDto(game);
 
-		return result;
+		return updateTokenPosition(moveDto);
 	}
 
 	private boolean isSpecialDiceValue(Game game) {
@@ -116,36 +109,8 @@ public class GameService {
 		jump(token, entryPoint);
 	}
 
-	private void move(Token token) {
-		int desFieldnumber = (token.getFieldNumber() + game.getDiceValue()) % 32;
-		
-		Token desToken = tokenRepository.findOneByFieldtypeAndFieldNumber(FieldType.WAYPOINT, desFieldnumber);
-		
-		if(desToken != null) {
-			strike(desToken);
-		}
-		
-		token.setFieldNumber(desFieldnumber);
-		tokenRepository.save(token);
-	}
-	
-	private void strike(Token token) {
-		token.setFieldNumber(token.getHomeFieldnumber());
-		token.setColor(token.getIdentifier());
-		token.setFieldtype(FieldType.HOMEPOINT);
-		tokenRepository.save(token);
-		TokenDto enemy = tokenConverter.toDto(token);
-		
-		actionResponseDto.setEnemy(enemy);
-	}
-
 	private void jump(Token token, Token destination) {
 		System.out.println("just jump!");
-
-		token.setFieldNumber(destination.getFieldNumber());
-		token.setFieldtype(destination.getFieldtype());
-		token.setColor(destination.getColor());
-		tokenRepository.save(token);
 
 	}
 
@@ -181,15 +146,27 @@ public class GameService {
 		return false;
 	}
 
+	private void move(Token token) {
+		// TODO Auto-generated method stub
+
+	}
+
 	private boolean isProperPlayer(Player player, Game game) {
 		// return player.getId() == game.getHost().getId();
 		return true;
 	}
 
-	private TokenDto updateTokenPosition(Token token) {
-		token = tokenRepository.findOneById(token.getId());
+	private MoveDto updateTokenPosition(MoveDto moveDto) {
+		Token token = tokenRepository.findOneById(moveDto.getToken().getId());
+
+		token.setFieldtype(moveDto.getDestination().getFieldtype());
+		token.setFieldNumber(moveDto.getDestination().getFieldnumber());
+
+		tokenRepository.save(token);
+
 		TokenDto tokenDto = tokenConverter.toDto(token);
-		return tokenDto;
+		moveDto.setDestination(tokenDto);
+		return moveDto;
 	}
 
 	public GameDto dice(UserDetails userDetails) throws Exception {
@@ -199,14 +176,14 @@ public class GameService {
 
 		Game game = playerGame.get(0).getGame();
 
-//		if (game.isDiced()) {
-//			throw new Exception("Not turn to dice!");
-//		}
+		if (game.isDiced()) {
+			throw new Exception("Not turn to dice!");
+		}
 
 		int newDiceValue = ThreadLocalRandom.current().nextInt(1, 6 + 1);
 		// newDiceValue = 1;
 		game.setDiceValue(newDiceValue);
-		game.setDiced(true);
+		// game.setDiced(true);
 		gameRepository.save(game);
 
 		GameDto result = gameConverter.toDto(game);
@@ -216,11 +193,9 @@ public class GameService {
 
 	public GameDto loadGame(GameDto gameDto, UserDetails userDetails) throws Exception {
 
-		/*
-		 * if (!isPlayerJoinedGame(gameDto.getId(), userDetails.getUsername())) { throw
-		 * new Exception("You not in this game!"); }
-		 */
-		
+		if (!isPlayerJoinedGame(gameDto.getId(), userDetails.getUsername())) {
+			throw new Exception("You not in this game!");
+		}
 
 		Game game = gameRepository.findOneById(gameDto.getId());
 

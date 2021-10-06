@@ -8,10 +8,13 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
+import com.huyvu.it.models.Color;
+import com.huyvu.it.models.FieldType;
 import com.huyvu.it.models.Game;
 import com.huyvu.it.models.Player;
 import com.huyvu.it.models.PlayerGame;
 import com.huyvu.it.models.Status;
+import com.huyvu.it.models.Token;
 import com.huyvu.it.repository.GameRepository;
 import com.huyvu.it.repository.PlayerGameRepository;
 import com.huyvu.it.repository.PlayerRepository;
@@ -32,9 +35,7 @@ public class DataLoader implements ApplicationRunner {
 	@Autowired
 	private TokenRepository tokenRepository;
 
-
 	public void run(ApplicationArguments args) {
-
 
 		System.out.println("================INIT DB=================");
 
@@ -43,18 +44,25 @@ public class DataLoader implements ApplicationRunner {
 		Player player3 = playerRepository.save(new Player("huyvu3", "huyvu"));
 		Player player4 = playerRepository.save(new Player("huyvu4", "huyvu"));
 
-//		Game game = gameRepository.save(new Game("Game 1", Status.WAITING, player1));
-//		Game game2 = gameRepository.save(new Game("Game 2", Status.IN_PROGRESS, player2));
-//		Game game3 = gameRepository.save(new Game("Game 3", Status.CLOSED, player3));
-//		Game game4 = gameRepository.save(new Game("Game 4", Status.WAITING, player4));
+		
 
-//		List<PlayerGame> playerGames = new ArrayList<>();
-//		playerGames.add(new PlayerGame(player1, game, false));
-//		playerGames.add(new PlayerGame(player2, game, false));
-//		playerGames.add(new PlayerGame(player3, game, false));
-//		playerGames.add(new PlayerGame(player4, game, false));
-//
-//		playerGameRepository.saveAll(playerGames);
+
+
+		Game game = gameRepository.save(new Game("Game 1", Status.WAITING, player1));
+		Game game2 = gameRepository.save(new Game("Game 2", Status.IN_PROGRESS, player2));
+		Game game3 = gameRepository.save(new Game("Game 3", Status.CLOSED, player3));
+		Game game4 = gameRepository.save(new Game("Game 4", Status.WAITING, player4));
+
+		List<PlayerGame> playerGames = new ArrayList<>();
+		playerGames.add(new PlayerGame(player1, game, false));
+		playerGames.add(new PlayerGame(player2, game, false));
+		playerGames.add(new PlayerGame(player3, game, false));
+		playerGames.add(new PlayerGame(player4, game, false));
+		
+		
+		playerGameRepository.saveAll(playerGames);
+		
+		
 
 	}
 }

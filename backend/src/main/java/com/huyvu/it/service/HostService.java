@@ -65,21 +65,21 @@ public class HostService {
 	private List<Token> createListToken(Game game){
 		List<Token> tokens = new ArrayList<>();
 
-		tokens.add(new Token(Color.RED, 1, FieldType.HOMEPOINT, Color.RED, 1, 30, 150, 50, game));
-		tokens.add(new Token(Color.RED, 2, FieldType.HOMEPOINT, Color.RED, 2, 30, 150, 150, game));
-		tokens.add(new Token(Color.RED, 3, FieldType.HOMEPOINT, Color.RED, 3, 30, 50, 150, game));
+		tokens.add(new Token(Color.RED, 1, FieldType.HOMEPOINT, "token" + 1, 30, 150, 50, game));
+		tokens.add(new Token(Color.RED, 2, FieldType.HOMEPOINT, "token" + 2, 30, 150, 150, game));
+		tokens.add(new Token(Color.RED, 3, FieldType.HOMEPOINT, "token" + 3, 30, 50, 150, game));
 
-		tokens.add(new Token(Color.GREEN, 1, FieldType.HOMEPOINT, Color.GREEN, 1, 30, 1050, 950, game));
-		tokens.add(new Token(Color.GREEN, 2, FieldType.HOMEPOINT, Color.GREEN, 2, 30, 950, 950, game));
-		tokens.add(new Token(Color.GREEN, 3, FieldType.HOMEPOINT, Color.GREEN, 3, 30, 950, 1050, game));
+		tokens.add(new Token(Color.GREEN, 1, FieldType.HOMEPOINT, "token" + 1, 30, 1050, 950, game));
+		tokens.add(new Token(Color.GREEN, 2, FieldType.HOMEPOINT, "token" + 2, 30, 950, 950, game));
+		tokens.add(new Token(Color.GREEN, 3, FieldType.HOMEPOINT, "token" + 3, 30, 950, 1050, game));
 
-		tokens.add(new Token(Color.YELLOW, 1, FieldType.HOMEPOINT, Color.YELLOW, 1, 30, 150, 1050, game));
-		tokens.add(new Token(Color.YELLOW, 2, FieldType.HOMEPOINT, Color.YELLOW, 2, 30, 150, 950, game));
-		tokens.add(new Token(Color.YELLOW, 3, FieldType.HOMEPOINT, Color.YELLOW, 3, 30, 50, 950, game));
+		tokens.add(new Token(Color.YELLOW, 1, FieldType.HOMEPOINT, "token" + 1, 30, 150, 1050, game));
+		tokens.add(new Token(Color.YELLOW, 2, FieldType.HOMEPOINT, "token" + 2, 30, 150, 950, game));
+		tokens.add(new Token(Color.YELLOW, 3, FieldType.HOMEPOINT, "token" + 3, 30, 50, 950, game));
 
-		tokens.add(new Token(Color.BLUE, 1, FieldType.HOMEPOINT, Color.BLUE, 1, 30, 950, 50, game));
-		tokens.add(new Token(Color.BLUE, 2, FieldType.HOMEPOINT, Color.BLUE, 2, 30, 950, 150, game));
-		tokens.add(new Token(Color.BLUE, 3, FieldType.HOMEPOINT, Color.BLUE, 3, 30, 1050, 150, game));
+		tokens.add(new Token(Color.BLUE, 1, FieldType.HOMEPOINT, "token" + 1, 30, 950, 50, game));
+		tokens.add(new Token(Color.BLUE, 2, FieldType.HOMEPOINT, "token" + 2, 30, 950, 150, game));
+		tokens.add(new Token(Color.BLUE, 3, FieldType.HOMEPOINT, "token" + 3, 30, 1050, 150, game));
 		
 		return tokenRepository.saveAll(tokens);
 	}
