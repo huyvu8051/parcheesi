@@ -5,13 +5,9 @@ export default {
 		return Api().get('game');
 	},
 	createGame(credentials) {
-		return Api().post("game", credentials);
+		return Api().post("game",credentials);
 	},
 	action(credentials) {
-		return Api().post("action", credentials);
-	},
-
-	join(credentials) {
-		return Api().post("join", credentials);
+		return Api().post("action",credentials);
 	}
 }

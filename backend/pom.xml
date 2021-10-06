@@ -18,13 +18,6 @@
 		<java.version>1.8</java.version>
 	</properties>
 	<dependencies>
-		<!-- socket.io -->
-		<dependency>
-			<groupId>com.corundumstudio.socketio</groupId>
-			<artifactId>netty-socketio</artifactId>
-			<version>1.7.19</version>
-		</dependency>
-
 		<!-- jwt -->
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
@@ -68,14 +61,11 @@
 			<artifactId>mssql-jdbc</artifactId>
 			<scope>runtime</scope>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<version>1.18.16</version>
-			<scope>provided</scope>
+			<optional>true</optional>
 		</dependency>
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>

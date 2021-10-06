@@ -13,7 +13,5 @@ public interface TokenRepository extends JpaRepository<Token, Integer> {
 
 	Token findOneById(int id);
 
-	Token findOneByFieldtypeAndFieldNumber(FieldType waypoint, int desFieldnumber);
-
 
 }

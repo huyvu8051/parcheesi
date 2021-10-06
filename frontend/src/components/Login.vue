@@ -15,7 +15,6 @@
                 type="text"
                 v-model="username"
                 required
-                v-on:keyup.enter.exact="login"
               ></v-text-field>
               <v-text-field
                 id="password"
@@ -25,7 +24,6 @@
                 type="password"
                 v-model="password"
                 required
-                v-on:keyup.enter.exact="login"
               ></v-text-field>
             </v-form>
           </v-card-text>
@@ -69,6 +67,7 @@ export default {
         console.log(this.$store.state.token);
         console.log(this.$store.state.isUserLoggedIn);
         console.log(this.$store.state.username);
+        
 
         this.$router.push({
           name: "game"
