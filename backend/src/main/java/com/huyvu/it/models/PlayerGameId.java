@@ -19,4 +19,5 @@ public class PlayerGameId implements Serializable {
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "game_id")
 	private Game game;
+	
 }

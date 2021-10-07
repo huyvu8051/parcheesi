@@ -1,59 +1,51 @@
 <template>
-  <div>
-    <button id="roll-button" v-on:click="rollDice">ROLL DICE</button>
-    <div class="dice">
-      <ol class="die-list even-roll" data-roll="1" id="die-1">
-        <li class="die-item" data-side="1">
-          <span class="dot"></span>
-        </li>
-        <li class="die-item" data-side="2">
-          <span class="dot"></span>
-          <span class="dot"></span>
-        </li>
-        <li class="die-item" data-side="3">
-          <span class="dot"></span>
-          <span class="dot"></span>
-          <span class="dot"></span>
-        </li>
-        <li class="die-item" data-side="4">
-          <span class="dot"></span>
-          <span class="dot"></span>
-          <span class="dot"></span>
-          <span class="dot"></span>
-        </li>
-        <li class="die-item" data-side="5">
-          <span class="dot"></span>
-          <span class="dot"></span>
-          <span class="dot"></span>
-          <span class="dot"></span>
-          <span class="dot"></span>
-        </li>
-        <li class="die-item" data-side="6">
-          <span class="dot"></span>
-          <span class="dot"></span>
-          <span class="dot"></span>
-          <span class="dot"></span>
-          <span class="dot"></span>
-          <span class="dot"></span>
-        </li>
-      </ol>
-    </div>
-  </div>
+  <v-layout align-center justify-center yellow>
+    <v-flex xs12 sm12 md8 pink>
+      
+      <div class="dice purple">
+        <ol class="die-list even-roll" data-roll="1" id="die-1">
+          <li class="die-item" data-side="1">
+            <span class="dot"></span>
+          </li>
+          <li class="die-item" data-side="2">
+            <span class="dot"></span>
+            <span class="dot"></span>
+          </li>
+          <li class="die-item" data-side="3">
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+          </li>
+          <li class="die-item" data-side="4">
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+          </li>
+          <li class="die-item" data-side="5">
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+          </li>
+          <li class="die-item" data-side="6">
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+          </li>
+        </ol>
+      </div>
+    </v-flex>
+  </v-layout>
 </template>
 
 <script>
 import playerService from "@/services/Game";
 export default {
-  pros: {
-    iDiced: Number,
-    isDiced: Boolean,
-    oCurrentPlayer: Object
-  },
-  data() {
-    return {
-      msg: "Welcome to Your Vue.js App"
-    };
-  },
   created: function() {
     this.$eventBus.$on("dice", diceValue => {
       const dice = [...document.querySelectorAll(".die-list")];
@@ -64,17 +56,10 @@ export default {
     });
   },
   methods: {
-    async rollDice() {
-      var diceValue = 1;
-      const dice = [...document.querySelectorAll(".die-list")];
-
-      var response = await playerService.getIDiced();
-    },
-
     toggleClasses(die) {
       die.classList.toggle("odd-roll");
       die.classList.toggle("even-roll");
-    },
+    }
   }
 };
 </script>
@@ -84,24 +69,6 @@ export default {
 *::before,
 *::after {
   box-sizing: content-box;
-}
-* {
-  margin: 0;
-  padding: 0;
-  vertical-align: baseline;
-}
-
-html {
-  font-family: system-ui, sans-serif;
-}
-
-body {
-  /* background: linear-gradient(#545454, #454545, #676767); */
-  display: grid;
-  grid-template-columns: 1fr;
-  height: 100vh;
-  overflow: hidden;
-  width: 100%;
 }
 
 .dice {
@@ -119,24 +86,22 @@ body {
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: 1fr;
-  height: 6rem;
+  height: 5rem;
   list-style-type: none;
   transform-style: preserve-3d;
-  width: 6rem;
+  width: 5rem;
 }
 
 .even-roll {
-  transition: transform 0.5s ease-out;
+  transition: transform 1s ease-out;
 }
 
 .odd-roll {
-  transition: transform 0.5s ease-out;
+  transition: transform 1s ease-out;
 }
 
 .die-item {
   background-color: #ff0000;
-  box-shadow: inset -0.35rem 0.35rem 0.75rem rgba(0, 0, 0, 0.3),
-    inset 0.5rem -0.25rem 0.5rem rgba(0, 0, 0, 0.15);
   display: grid;
   grid-column: 1;
   grid-row: 1;
@@ -146,20 +111,19 @@ body {
     "seven eight nine";
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(3, 1fr);
-  height: 100%;
-  padding: 1rem;
-  width: 100%;
+  height: 70%;
+  padding: 0.3rem;
+  width: 70%;
 }
 
 .dot {
   align-self: center;
   background-color: #ffffff;
   border-radius: 50%;
-  box-shadow: inset -0.15rem 0.15rem 0.25rem rgba(0, 0, 0, 0.5);
   display: block;
-  height: 1.25rem;
+  height: 0.625rem;
   justify-self: center;
-  width: 1.25rem;
+  width: 0.625rem;
 }
 
 .even-roll[data-roll="1"] {
@@ -211,27 +175,27 @@ body {
 }
 
 [data-side="1"] {
-  transform: rotate3d(0, 0, 0, 90deg) translateZ(4rem);
+  transform: rotate3d(0, 0, 0, 90deg) translateZ(2rem);
 }
 
 [data-side="2"] {
-  transform: rotate3d(-1, 0, 0, 90deg) translateZ(4rem);
+  transform: rotate3d(-1, 0, 0, 90deg) translateZ(2rem);
 }
 
 [data-side="3"] {
-  transform: rotate3d(0, 1, 0, 90deg) translateZ(4rem);
+  transform: rotate3d(0, 1, 0, 90deg) translateZ(2rem);
 }
 
 [data-side="4"] {
-  transform: rotate3d(0, -1, 0, 90deg) translateZ(4rem);
+  transform: rotate3d(0, -1, 0, 90deg) translateZ(2rem);
 }
 
 [data-side="5"] {
-  transform: rotate3d(1, 0, 0, 90deg) translateZ(4rem);
+  transform: rotate3d(1, 0, 0, 90deg) translateZ(2rem);
 }
 
 [data-side="6"] {
-  transform: rotate3d(1, 0, 0, 180deg) translateZ(4rem);
+  transform: rotate3d(1, 0, 0, 180deg) translateZ(2rem);
 }
 
 [data-side="1"] .dot:nth-of-type(1) {
@@ -331,11 +295,5 @@ button {
 
 button:hover {
   cursor: pointer;
-}
-
-@media (min-width: 900px) {
-  .dice {
-    perspective: 1300px;
-  }
 }
 </style>

@@ -42,6 +42,7 @@ public class DataLoader implements ApplicationRunner {
 		Player player2 = playerRepository.save(new Player("huyvu2", "huyvu"));
 		Player player3 = playerRepository.save(new Player("huyvu3", "huyvu"));
 		Player player4 = playerRepository.save(new Player("huyvu4", "huyvu"));
+		Player player5 = playerRepository.save(new Player("huyvu5", "huyvu"));
 
 //		Game game = gameRepository.save(new Game("Game 1", Status.WAITING, player1));
 //		Game game2 = gameRepository.save(new Game("Game 2", Status.IN_PROGRESS, player2));

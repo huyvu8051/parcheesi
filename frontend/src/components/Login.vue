@@ -48,13 +48,6 @@ export default {
     password: ""
   }),
   methods: {
-    logout() {
-      this.$store.dispatch("setToken", null);
-      this.$store.dispatch("setEmail", null);
-      // this.$router.push({
-      //   name: "login"
-      // });
-    },
     async login() {
       try {
         const response = await AuthenticationService.login({

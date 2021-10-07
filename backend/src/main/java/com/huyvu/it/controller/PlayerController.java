@@ -26,7 +26,7 @@ public class PlayerController {
 
 	@Autowired
 	private PlayerService playerService;
-	
+
 	@Autowired
 	private SocketIOServer server;
 
@@ -43,11 +43,10 @@ public class PlayerController {
 	public ResponseEntity<GameDto> createNewGame(@RequestBody GameDto gameDto) {
 
 		try {
-			UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
-					.getPrincipal();
+			Player player = (Player) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
 			return ResponseEntity.ok(
-					hostService.createGame(gameDto, new Player(userDetails.getUsername(), userDetails.getPassword())));
+					hostService.createGame(gameDto, player));
 		} catch (Exception e) {
 			return ResponseEntity.internalServerError().build();
 		}

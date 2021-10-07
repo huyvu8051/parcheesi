@@ -39,7 +39,16 @@ public class Player implements UserDetails {
 		this.username = username;
 		this.password = password;
 	}
+	
+	
+	@Override
+	public boolean equals(Object obj) {
 
+		Player player = (Player) obj;
+
+		return getId() == player.getId();
+	}
+	
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return null;

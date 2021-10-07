@@ -6,7 +6,6 @@ import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -24,7 +23,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EntityListeners({AuditingEntityListener.class})
+@EntityListeners({ AuditingEntityListener.class })
 public class Game {
 	@Id
 	@GeneratedValue
@@ -33,13 +32,13 @@ public class Game {
 	private Status status;
 
 	private int diceValue;
-	
+
 	private boolean isDiced;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "currentPlayer_id")
 	private Player currentPlayer;
-	
+
 	@CreatedDate
 	private Date createdDate;
 
@@ -50,16 +49,13 @@ public class Game {
 	@OneToMany(mappedBy = "primaryKey.game")
 	private List<PlayerGame> playerGames = new ArrayList<>();
 
-	@OneToMany(mappedBy = "game", fetch = FetchType.EAGER)
-	private List<Token> tokens = new ArrayList<>();
-
-	public Game(String name, Status status, Player host) {
+	public Game(String name, Status status, Player currentPlayer, Player host) {
 		this.name = name;
 		this.status = status;
+		this.currentPlayer = currentPlayer;
 		this.host = host;
 		this.diceValue = 0;
 		this.isDiced = false;
 	}
-	
 
 }

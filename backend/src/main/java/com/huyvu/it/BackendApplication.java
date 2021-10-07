@@ -1,5 +1,8 @@
 package com.huyvu.it;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -14,14 +17,24 @@ import com.corundumstudio.socketio.annotation.SpringAnnotationScanner;
 @SpringBootApplication
 @EnableJpaAuditing
 public class BackendApplication {
-	private String host = "localhost";
+	private String host = "";
 	private Integer port = 8082;
 
 	@Bean
 	public SocketIOServer socketioserver() {
+
+		try {
+			InetAddress IP=InetAddress.getLocalHost();
+			this.host = IP.getHostAddress();
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		Configuration config = new Configuration();
 		config.setHostname(host);
 		config.setPort(port);
+
 		// This can be used for authentication
 		config.setAuthorizationListener(new AuthorizationListener() {
 

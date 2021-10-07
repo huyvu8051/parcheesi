@@ -11,13 +11,16 @@ export default {
 		return Api().put('admin/category', credentials);
 	},
 	createGame(credentials) {
-		return Api().post("game",credentials);
+		return Api().post("game", credentials);
 	},
 	action(credentials) {
-		return Api().post("action",credentials);
+		return Api().post("action", credentials);
 	},
 	loadGame(credentials) {
 		var response = Api().post("parcheesi", credentials);
 		return response;
+	},
+	startGame(credentials) {
+		return Api().post("start", credentials);
 	}
 }

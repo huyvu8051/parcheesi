@@ -1,12 +1,23 @@
 <template>
   <v-app>
-    <router-view />
+    <Header />
+    <v-main>
+      <v-container fluid fill-height>
+        <router-view></router-view>
+      </v-container>
+    </v-main>
   </v-app>
 </template>
 
 <script>
+import Footer from "@/components/Footer";
+import Header from "@/components/Header";
 export default {
-  name: "App"
+  name: "App",
+  components: {
+    Footer: Footer,
+    Header: Header
+  }
 };
 </script>
 

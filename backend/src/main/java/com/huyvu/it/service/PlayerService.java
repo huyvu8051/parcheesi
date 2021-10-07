@@ -8,9 +8,11 @@ import org.springframework.stereotype.Service;
 
 import com.huyvu.it.converter.GameConverter;
 import com.huyvu.it.dto.GameDto;
+import com.huyvu.it.models.Color;
 import com.huyvu.it.models.Game;
 import com.huyvu.it.models.Player;
 import com.huyvu.it.models.PlayerGame;
+import com.huyvu.it.models.Status;
 import com.huyvu.it.repository.GameRepository;
 import com.huyvu.it.repository.PlayerGameRepository;
 
@@ -33,16 +35,47 @@ public class PlayerService {
 		return result;
 	}
 
-	public GameDto join(GameDto gameDto, Player player) {
-
+	public GameDto join(GameDto gameDto, Player player) throws Exception {
+		
 		Game game = gameRepository.findOneById(gameDto.getId());
+		
+		if(!game.getStatus().equals(Status.WAITING)){
+			throw new Exception("Game not available!");
+		}
+		
+		if (!isPlayerInGame(player, game)) {
+			if (game.getPlayerGames().size() >= 4) {
+				throw new Exception("Slot is full!");
+			}
+		}
 
-		PlayerGame playerGame = playerGameRepository.save(new PlayerGame(player, game, false));
+		PlayerGame playerGame = playerGameRepository.save(createNewPlayerInGame(player, game));
 
 		Game entity = playerGame.getGame();
 
 		GameDto result = gameConverter.toDto(entity);
 
 		return result;
+	}
+
+	public PlayerGame createNewPlayerInGame(Player player, Game game) {
+		List<PlayerGame> playerGames = game.getPlayerGames();
+		int lastPlayerIndex = playerGames.size();
+		Color[] colors = Color.values();
+
+		PlayerGame playerGame = new PlayerGame();
+
+		playerGame.setColor(colors[lastPlayerIndex]);
+		playerGame.setGame(game);
+		playerGame.setLogin(true);
+		playerGame.setPlayer(player);
+
+		return playerGame;
+	}
+
+	private boolean isPlayerInGame(Player player, Game game) {
+		List<PlayerGame> players = game.getPlayerGames();
+
+		return players.stream().anyMatch(e -> e.getPlayer().equals(player));
 	}
 }

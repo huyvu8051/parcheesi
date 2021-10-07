@@ -1,6 +1,7 @@
 package com.huyvu.it.service;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
@@ -11,14 +12,16 @@ import org.springframework.stereotype.Service;
 
 import com.huyvu.it.converter.GameConverter;
 import com.huyvu.it.converter.TokenConverter;
-import com.huyvu.it.dto.ActionResponseDto;
 import com.huyvu.it.dto.GameDto;
 import com.huyvu.it.dto.TokenDto;
+import com.huyvu.it.models.Color;
 import com.huyvu.it.models.EntryPoint;
 import com.huyvu.it.models.FieldType;
+import com.huyvu.it.models.FinishPointZone;
 import com.huyvu.it.models.Game;
 import com.huyvu.it.models.Player;
 import com.huyvu.it.models.PlayerGame;
+import com.huyvu.it.models.Status;
 import com.huyvu.it.models.Token;
 import com.huyvu.it.repository.GameRepository;
 import com.huyvu.it.repository.PlayerGameRepository;
@@ -47,15 +50,10 @@ public class GameService {
 	private GameConverter gameConverter;
 
 	private Game game;
-	
-	private ActionResponseDto actionResponseDto;
 
-	public GameDto action(TokenDto tokenDto, UserDetails userDetails) throws Exception {
-		actionResponseDto = new ActionResponseDto();
+	public GameDto action(TokenDto tokenDto, Player player) throws Exception {
 		Token token = tokenRepository.findOneById(tokenDto.getId());
-		game = gameRepository.findOneById(token.getGame().getId());
-
-		Player player = playerRepository.findOneByUsername(userDetails.getUsername());
+		game = gameRepository.findOneById(token.getPlayerGame().getGame().getId());
 
 		if (!isProperPlayer(player, game)) {
 			throw new Exception("Not " + player.getUsername() + " turn!");
@@ -68,9 +66,14 @@ public class GameService {
 
 		switch (token.getFieldtype()) {
 		case WAYPOINT:
+			if (isStandInFinishPointZone(token)) {
+				superMove(token);
+				break;
+			}
 			move(token);
 			break;
 		case HOMEPOINT:
+
 			if (!isSpecialDiceValue(game)) {
 				// throw new Exception("Player " + player.getUsername() + " don't have special
 				// dice value!");
@@ -85,13 +88,67 @@ public class GameService {
 			break;
 		}
 
-		// jump
+		if (!isSpecialDiceValue(game)) {
+			game.setCurrentPlayer(getNextPlayer(game));
+		}
+
+		checkGameEnded(game);
+
 		game.setDiced(false);
 		gameRepository.save(game);
-		
+
 		GameDto result = gameConverter.toDto(game);
 
 		return result;
+	}
+
+	private void checkGameEnded(Game game2) {
+
+		
+
+	}
+
+	private Player getNextPlayer(Game game) {
+		List<PlayerGame> playerGames = game.getPlayerGames();
+		int size = playerGames.size();
+		playerGames.sort((e1, e2) -> e1.getCreatedDate().compareTo(e2.getCreatedDate()));
+
+		PlayerGame currentPlayer = new PlayerGame(game.getCurrentPlayer(), null, false, Color.BLUE);
+
+		int index = playerGames.indexOf(currentPlayer);
+
+		int currentIndex = (index + 1) % size;
+
+		return playerGames.get(currentIndex).getPlayer();
+	}
+
+	private boolean isStandInFinishPointZone(Token token) {
+		FinishPointZone enumInstance = FinishPointZone.valueOf(token.getPlayerGame().getColor().toString());
+		int position = enumInstance.getValue();
+		return token.getFieldNumber() == position;
+	}
+
+	private void superMove(Token token) throws Exception {
+		if (!isAvailableToJumpToFinishPoint(token)) {
+			throw new Exception("Not available to jump to finish point!");
+		}
+		token.setColor(token.getPlayerGame().getColor());
+		token.setFieldNumber(game.getDiceValue());
+		token.setFieldtype(FieldType.FINISHPOINT);
+
+		tokenRepository.save(token);
+	}
+
+	private boolean isAvailableToJumpToFinishPoint(Token token) {
+		if (game.getDiceValue() < 1 || game.getDiceValue() > 3) {
+			return false;
+		}
+		/*
+		 * check is finish way blocked
+		 *
+		 *
+		 */
+		return true;
 	}
 
 	private boolean isSpecialDiceValue(Game game) {
@@ -118,25 +175,23 @@ public class GameService {
 
 	private void move(Token token) {
 		int desFieldnumber = (token.getFieldNumber() + game.getDiceValue()) % 32;
-		
+
 		Token desToken = tokenRepository.findOneByFieldtypeAndFieldNumber(FieldType.WAYPOINT, desFieldnumber);
-		
-		if(desToken != null) {
+
+		if (desToken != null) {
 			strike(desToken);
 		}
-		
+
 		token.setFieldNumber(desFieldnumber);
 		tokenRepository.save(token);
 	}
-	
+
 	private void strike(Token token) {
 		token.setFieldNumber(token.getHomeFieldnumber());
-		token.setColor(token.getIdentifier());
+		token.setColor(token.getPlayerGame().getColor());
 		token.setFieldtype(FieldType.HOMEPOINT);
 		tokenRepository.save(token);
-		TokenDto enemy = tokenConverter.toDto(token);
-		
-		actionResponseDto.setEnemy(enemy);
+
 	}
 
 	private void jump(Token token, Token destination) {
@@ -161,7 +216,7 @@ public class GameService {
 	}
 
 	private boolean anAllyStandInDestination(Token token) {
-		List<Token> tokens = tokenRepository.findAllByGameId(game.getId());
+		List<Token> tokens = tokenRepository.findAllByPlayerGamePrimaryKeyGameId(game.getId());
 
 		List<Token> allys = tokens.stream()
 				.filter(e -> e.getFieldtype().equals(token.getFieldtype())
@@ -176,7 +231,7 @@ public class GameService {
 	}
 
 	private boolean waypointIsFree(Token token) {
-		List<Token> tokens = game.getTokens();
+		
 
 		return false;
 	}
@@ -192,8 +247,7 @@ public class GameService {
 		return tokenDto;
 	}
 
-	public GameDto dice(UserDetails userDetails) throws Exception {
-		Player player = playerRepository.findOneByUsername(userDetails.getUsername());
+	public GameDto dice(Player player) throws Exception {
 
 		List<PlayerGame> playerGame = playerGameRepository.findfirstByPlayerIdOrderByCreatedDateDesc(player.getId());
 
@@ -214,13 +268,12 @@ public class GameService {
 		return result;
 	}
 
-	public GameDto loadGame(GameDto gameDto, UserDetails userDetails) throws Exception {
+	public GameDto loadGame(GameDto gameDto, Player player) throws Exception {
 
 		/*
 		 * if (!isPlayerJoinedGame(gameDto.getId(), userDetails.getUsername())) { throw
 		 * new Exception("You not in this game!"); }
 		 */
-		
 
 		Game game = gameRepository.findOneById(gameDto.getId());
 
@@ -234,6 +287,38 @@ public class GameService {
 		Game game = gameRepository.findOneById(id);
 		List<PlayerGame> players = game.getPlayerGames();
 		return players.stream().anyMatch(e -> e.getPlayer().getId() == player.getId());
+	}
+
+	public GameDto start(GameDto gameDto, Player player) {
+
+		Game game = gameRepository.findOneById(gameDto.getId());
+		game.setStatus(Status.IN_PROGRESS);
+		createListToken(game);
+		gameRepository.save(game);
+
+		GameDto result = gameConverter.toDto(game);
+
+		return result;
+	}
+
+	private void createListToken(Game game) {
+		
+		List<Token> tokens = new ArrayList<>();
+		
+		for (PlayerGame playerGame : game.getPlayerGames()) {
+			
+			Color color = playerGame.getColor();
+
+			for (int i = 1; i <= 3; i++) {
+				tokens.add(new Token(color, i, FieldType.HOMEPOINT, i, playerGame));
+			}
+
+			tokenRepository.saveAll(tokens);
+
+		}
+
+		tokenRepository.saveAll(tokens);
+
 	}
 
 }

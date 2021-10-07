@@ -1,13 +1,18 @@
 package com.huyvu.it.models;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.AssociationOverride;
 import javax.persistence.AssociationOverrides;
+import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 
 import org.springframework.data.annotation.CreatedDate;
@@ -19,23 +24,35 @@ import lombok.Setter;
 
 @Entity
 @NoArgsConstructor
-@AssociationOverrides({
-		@AssociationOverride(name = "primaryKey.student", joinColumns = @JoinColumn(name = "student_id")),
-		@AssociationOverride(name = "primaryKey.challenge", joinColumns = @JoinColumn(name = "challenge_id")) })
-@EntityListeners({AuditingEntityListener.class})
+@AssociationOverrides({ @AssociationOverride(name = "primaryKey.player", joinColumns = @JoinColumn(name = "player_id")),
+		@AssociationOverride(name = "primaryKey.game", joinColumns = @JoinColumn(name = "game_id")) })
+@EntityListeners({ AuditingEntityListener.class })
 public class PlayerGame {
-	
 
 	@EmbeddedId
 	@Getter
 	private PlayerGameId primaryKey = new PlayerGameId();
-	
+
 	private boolean isLogin;
-	
+
 	@Getter
 	@Setter
+	@Column(updatable = false)
+	private Color color;
+
+	@Getter
+	@Setter
+	@Column(updatable = false)
 	@CreatedDate
 	private Date createdDate;
+
+	@Override
+	public boolean equals(Object obj) {
+
+		PlayerGame playerGame = (PlayerGame) obj;
+
+		return getPlayer().getId() == playerGame.getPlayer().getId();
+	}
 
 	@Transient
 	public Player getPlayer() {
@@ -62,10 +79,11 @@ public class PlayerGame {
 	public void setLogin(boolean isLogin) {
 		this.isLogin = isLogin;
 	}
-	
-	public PlayerGame(Player player, Game game, boolean isLogin) {
+
+	public PlayerGame(Player player, Game game, boolean isLogin, Color color) {
 		primaryKey.setPlayer(player);
 		primaryKey.setGame(game);
 		this.isLogin = isLogin;
+		this.color = color;
 	}
 }

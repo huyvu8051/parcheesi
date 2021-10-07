@@ -20,6 +20,8 @@ public class GameDto {
 	private boolean isDiced;
 	private PlayerDto host;
 	private Date createdDate;
+	
+	private PlayerDto currentPlayer;
 
 	private List<PlayerDto> players;
 

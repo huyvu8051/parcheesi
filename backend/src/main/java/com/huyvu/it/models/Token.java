@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 
 import lombok.AllArgsConstructor;
@@ -18,28 +19,23 @@ public class Token {
 	@Id
 	@GeneratedValue
 	private int id;
+	// identify position in table
 	private Color color;
 	private int fieldNumber;
 	private FieldType fieldtype;
-	private Color identifier;
+
+	// indentify the number of home field when being striked
 	private int homeFieldnumber;
-	private int radius;
-	private int x;
-	private int y;
-	
+
 	@ManyToOne
-	@JoinColumn(name = "game_id")
-	private Game game;
-	
-	public Token(Color color, int fieldNumber, FieldType fieldtype, Color identifier, int homeFieldnumber, int radius, int x, int y, Game game) {
+	@JoinColumns({ @JoinColumn(name = "player_id"), @JoinColumn(name = "game_id") })
+	private PlayerGame playerGame;
+
+	public Token(Color color, int fieldNumber, FieldType fieldtype, int homeFieldnumber, PlayerGame playerGame) {
 		this.color = color;
 		this.fieldNumber = fieldNumber;
 		this.fieldtype = fieldtype;
-		this.identifier = identifier;
+		this.playerGame = playerGame;
 		this.homeFieldnumber = homeFieldnumber;
-		this.radius = radius;
-		this.x = x;
-		this.y = y;
-		this.game = game;
 	}
 }
