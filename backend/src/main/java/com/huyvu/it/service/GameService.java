@@ -3,6 +3,7 @@ package com.huyvu.it.service;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
@@ -28,6 +29,10 @@ import com.huyvu.it.repository.PlayerGameRepository;
 import com.huyvu.it.repository.PlayerRepository;
 import com.huyvu.it.repository.TokenRepository;
 
+/**
+ * @author huyvu
+ *
+ */
 @Service
 public class GameService {
 
@@ -51,6 +56,14 @@ public class GameService {
 
 	private Game game;
 
+	/**
+	 * is proper player
+	 * is special dice value
+	 * @param tokenDto
+	 * @param player
+	 * @return
+	 * @throws Exception
+	 */
 	public GameDto action(TokenDto tokenDto, Player player) throws Exception {
 		Token token = tokenRepository.findOneById(tokenDto.getId());
 		game = gameRepository.findOneById(token.getPlayerGame().getGame().getId());
@@ -60,8 +73,7 @@ public class GameService {
 		}
 
 		if (!game.isDiced()) {
-			// throw new Exception("Dice first to make a " + player.getUsername() + "
-			// turn!");
+			throw new Exception("Dice first to make a " + player.getUsername() + "turn!");
 		}
 
 		switch (token.getFieldtype()) {
@@ -73,11 +85,6 @@ public class GameService {
 			move(token);
 			break;
 		case HOMEPOINT:
-
-			if (!isSpecialDiceValue(game)) {
-				// throw new Exception("Player " + player.getUsername() + " don't have special
-				// dice value!");
-			}
 			entryMove(token);
 			break;
 		case FINISHPOINT:
@@ -104,22 +111,25 @@ public class GameService {
 
 	private void checkGameEnded(Game game2) {
 
-		
-
 	}
 
-	private Player getNextPlayer(Game game) {
+	private Color getNextPlayer(Game game) {
 		List<PlayerGame> playerGames = game.getPlayerGames();
 		int size = playerGames.size();
 		playerGames.sort((e1, e2) -> e1.getCreatedDate().compareTo(e2.getCreatedDate()));
 
-		PlayerGame currentPlayer = new PlayerGame(game.getCurrentPlayer(), null, false, Color.BLUE);
+		Optional<PlayerGame> optional = playerGames.stream().filter(e -> e.getColor().equals(game.getCurrentPlayer()))
+				.findAny();
+
+		Player player = optional.get().getPlayer();
+
+		PlayerGame currentPlayer = new PlayerGame(player, null, false, Color.BLUE);
 
 		int index = playerGames.indexOf(currentPlayer);
 
 		int currentIndex = (index + 1) % size;
 
-		return playerGames.get(currentIndex).getPlayer();
+		return playerGames.get(currentIndex).getColor();
 	}
 
 	private boolean isStandInFinishPointZone(Token token) {
@@ -151,6 +161,11 @@ public class GameService {
 		return true;
 	}
 
+	
+	/**
+	 * @param game
+	 * @return
+	 */
 	private boolean isSpecialDiceValue(Game game) {
 		return game.getDiceValue() == 1 || game.getDiceValue() == 6;
 	}
@@ -160,14 +175,32 @@ public class GameService {
 
 	}
 
-	// if the entry point is free, token can move to it
+	/**
+	 * is special dice value
+	 * is a enemy stand in destination
+	 * 
+	 * @param token
+	 * @throws Exception
+	 */
+	
 	private void entryMove(Token token) throws Exception {
-
+		if (!isSpecialDiceValue(game)) {
+			// throw new Exception("Player " + player.getUsername() + " don't have special
+			// dice value!");
+		}
 		Field field = EntryPoint.class.getField(token.getColor().toString());
 		Token entryPoint = (Token) field.get(Token.class);
 
 		if (anAllyStandInDestination(entryPoint)) {
 			throw new Exception("Your way point has been block!");
+		}
+		
+		// if enemy stand at destination, do strike
+		Token desToken = tokenRepository.findOneByFieldtypeAndFieldNumberAndPlayerGamePrimaryKeyGameId(
+				FieldType.WAYPOINT, entryPoint.getFieldNumber(), game.getId());
+
+		if (desToken != null) {
+			strike(desToken);
 		}
 
 		jump(token, entryPoint);
@@ -176,7 +209,8 @@ public class GameService {
 	private void move(Token token) {
 		int desFieldnumber = (token.getFieldNumber() + game.getDiceValue()) % 32;
 
-		Token desToken = tokenRepository.findOneByFieldtypeAndFieldNumber(FieldType.WAYPOINT, desFieldnumber);
+		Token desToken = tokenRepository.findOneByFieldtypeAndFieldNumberAndPlayerGamePrimaryKeyGameId(
+				FieldType.WAYPOINT, desFieldnumber, game.getId());
 
 		if (desToken != null) {
 			strike(desToken);
@@ -194,14 +228,16 @@ public class GameService {
 
 	}
 
+	/**
+	 * change position of token to destination position
+	 * 
+	 * @param token
+	 * @param destination
+	 */
 	private void jump(Token token, Token destination) {
-		System.out.println("just jump!");
-
 		token.setFieldNumber(destination.getFieldNumber());
 		token.setFieldtype(destination.getFieldtype());
 		token.setColor(destination.getColor());
-		tokenRepository.save(token);
-
 	}
 
 	// if
@@ -231,14 +267,18 @@ public class GameService {
 	}
 
 	private boolean waypointIsFree(Token token) {
-		
 
 		return false;
 	}
 
 	private boolean isProperPlayer(Player player, Game game) {
-		// return player.getId() == game.getHost().getId();
-		return true;
+		Color currentPlayerColor = game.getCurrentPlayer();
+
+		Optional<PlayerGame> playerGame = game.getPlayerGames().stream().filter(e -> e.getColor() == currentPlayerColor)
+				.findFirst();
+
+		return playerGame.get().getPlayer().getId() == player.getId();
+
 	}
 
 	private TokenDto updateTokenPosition(Token token) {
@@ -289,12 +329,15 @@ public class GameService {
 		return players.stream().anyMatch(e -> e.getPlayer().getId() == player.getId());
 	}
 
-	public GameDto start(GameDto gameDto, Player player) {
+	public GameDto start(GameDto gameDto, Player player) throws Exception {
 
 		Game game = gameRepository.findOneById(gameDto.getId());
-		game.setStatus(Status.IN_PROGRESS);
-		createListToken(game);
-		gameRepository.save(game);
+
+		if (game.getStatus() == Status.WAITING) {
+			game.setStatus(Status.IN_PROGRESS);
+			createListToken(game);
+			gameRepository.save(game);
+		}
 
 		GameDto result = gameConverter.toDto(game);
 
@@ -302,11 +345,11 @@ public class GameService {
 	}
 
 	private void createListToken(Game game) {
-		
+
 		List<Token> tokens = new ArrayList<>();
-		
+
 		for (PlayerGame playerGame : game.getPlayerGames()) {
-			
+
 			Color color = playerGame.getColor();
 
 			for (int i = 1; i <= 3; i++) {

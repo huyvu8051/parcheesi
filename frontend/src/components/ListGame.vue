@@ -1,96 +1,94 @@
 <template>
-    <v-layout align-center justify-center>
-      <v-flex xs12 sm12 md8>
-        <v-data-table
-          :headers="headers"
-          :items="desserts"
-          :search="search"
-          sort-by="calories"
-          class="elevation-1"
-        >
-          <template v-slot:[`item.status`]="{ item }">
-            <v-chip
-              class="ma-2"
-              color="orange"
-              text-color="white"
-              v-if="item.status === 'IN_PROGRESS'"
-            >
-              In progress
-              <v-icon right>done</v-icon>
-            </v-chip>
-            <v-chip class="ma-2" color="green" text-color="white" v-if="item.status === 'WAITING'">
-              Waiting
-              <v-icon right>mdi-checkbox-marked-circle</v-icon>
-            </v-chip>
-            <v-chip class="ma-2" color="red" text-color="white" v-if="item.status === 'CLOSED'">
-              Closed
-              <v-icon right>unpublished</v-icon>
-            </v-chip>
-          </template>
-          <template
-            v-slot:[`item.createdDate`]="{ item }"
-          >{{formatDate(item.createdDate)}}</template>
-          <template v-slot:top>
-            <v-toolbar flat>
-              <v-toolbar-title>LIST GAME</v-toolbar-title>
-              <v-divider class="mx-4" inset vertical></v-divider>
-              <v-text-field
-                v-model="search"
-                append-icon="mdi-magnify"
-                label="Search"
-                single-line
-                hide-details
-              ></v-text-field>
-              <v-spacer></v-spacer>
-              <v-dialog v-model="dialog" max-width="500px">
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on">New game</v-btn>
-                </template>
+  <v-layout align-center justify-center>
+    <v-flex xs12 sm12 md8>
+      <v-data-table
+        :headers="headers"
+        :items="desserts"
+        :search="search"
+        sort-by="calories"
+        class="elevation-1"
+      >
+        <template v-slot:[`item.status`]="{ item }">
+          <v-chip
+            class="ma-2"
+            color="orange"
+            text-color="white"
+            v-if="item.status === 'IN_PROGRESS'"
+          >
+            In progress
+            <v-icon right>done</v-icon>
+          </v-chip>
+          <v-chip class="ma-2" color="green" text-color="white" v-if="item.status === 'WAITING'">
+            Waiting
+            <v-icon right>mdi-checkbox-marked-circle</v-icon>
+          </v-chip>
+          <v-chip class="ma-2" color="red" text-color="white" v-if="item.status === 'CLOSED'">
+            Closed
+            <v-icon right>unpublished</v-icon>
+          </v-chip>
+        </template>
+        <template v-slot:[`item.createdDat`]="{ item }">{{formatDate(item.createdDate)}}</template>
+        <template v-slot:top>
+          <v-toolbar flat>
+            <v-toolbar-title>LIST GAME</v-toolbar-title>
+            <v-divider class="mx-4" inset vertical></v-divider>
+            <v-text-field
+              v-model="search"
+              append-icon="mdi-magnify"
+              label="Search"
+              single-line
+              hide-details
+            ></v-text-field>
+            <v-spacer></v-spacer>
+            <v-dialog v-model="dialog" max-width="500px">
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on">New game</v-btn>
+              </template>
 
-                <v-card>
-                  <v-card-title>
-                    <span class="text-h5">{{ formTitle }}</span>
-                  </v-card-title>
+              <v-card>
+                <v-card-title>
+                  <span class="text-h5">{{ formTitle }}</span>
+                </v-card-title>
 
-                  <v-card-text>
-                    <v-container>
-                      <v-row>
-                        <v-col cols="12" sm="12" md="12">
-                          <v-text-field v-model="editedItem.name" label="Game name"></v-text-field>
-                        </v-col>
-                      </v-row>
-                    </v-container>
-                  </v-card-text>
+                <v-card-text>
+                  <v-container>
+                    <v-row>
+                      <v-col cols="12" sm="12" md="12">
+                        <v-text-field v-model="editedItem.name" label="Game name"></v-text-field>
+                      </v-col>
+                    </v-row>
+                  </v-container>
+                </v-card-text>
 
-                  <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
-                    <v-btn color="blue darken-1" text @click="save">Save</v-btn>
-                  </v-card-actions>
-                </v-card>
-              </v-dialog>
-              <v-dialog v-model="dialogPlay" max-width="500px">
-                <v-card>
-                  <v-card-title class="text-h5">Are you sure you want to join this game?</v-card-title>
-                  <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn color="blue darken-1" text @click="closePlay">Cancel</v-btn>
-                    <v-btn color="blue darken-1" text @click="playConfirm">OK</v-btn>
-                    <v-spacer></v-spacer>
-                  </v-card-actions>
-                </v-card>
-              </v-dialog>
-            </v-toolbar>
-          </template>
-          <template v-slot:no-data>
-            <v-btn color="primary" @click="initialize">Reset</v-btn>
-          </template>
-          <template v-slot:item.actions="{ item }">
-            <v-icon small class="mr-2" @click="play(item)">play_arrow</v-icon>
-          </template>
-        </v-data-table>
-      </v-flex>
-    </v-layout>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
+                  <v-btn color="blue darken-1" text @click="save">Save</v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+            <v-dialog v-model="dialogPlay" max-width="500px">
+              <v-card>
+                <v-card-title class="text-h5">Are you sure you want to join this game?</v-card-title>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="blue darken-1" text @click="closePlay">Cancel</v-btn>
+                  <v-btn color="blue darken-1" text @click="playConfirm">OK</v-btn>
+                  <v-spacer></v-spacer>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+          </v-toolbar>
+        </template>
+        <template v-slot:no-data>
+          <v-btn color="primary" @click="initialize">Reset</v-btn>
+        </template>
+        <template v-slot:item.actions="{ item }">
+          <v-icon small class="mr-2" @click="play(item)">play_arrow</v-icon>
+        </template>
+      </v-data-table>
+    </v-flex>
+  </v-layout>
 </template>
 <script>
 import PlayerService from "@/services/Player";
@@ -191,7 +189,7 @@ export default {
     // play an available game
     async playConfirm() {
       console.log("Play " + this.editedItem.id);
-      
+
       // join a game
 
       try {
@@ -205,11 +203,8 @@ export default {
           query: { gameId: response.data.id }
         });
       } catch (error) {
-        console.log("Cannot join this room!")
+        console.log("Cannot join this room!");
       }
-      
-
-
 
       this.dialogPlay = false;
       this.$nextTick(() => {

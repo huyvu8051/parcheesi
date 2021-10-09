@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.huyvu.it.converter.GameConverter;
 import com.huyvu.it.dto.GameDto;
+import com.huyvu.it.models.Color;
 import com.huyvu.it.models.Game;
 import com.huyvu.it.models.Player;
 import com.huyvu.it.models.Status;
@@ -35,7 +36,7 @@ public class HostService {
 	public GameDto createGame(GameDto gameDto, Player host) {
 
 		// create game
-		Game game = gameRepository.save(new Game(gameDto.getName(), Status.WAITING, host, host));
+		Game game = gameRepository.save(new Game(gameDto.getName(), Status.WAITING, Color.BLUE, host));
 
 		// add player host to game
 		playerGameRepository.save(playerService.createNewPlayerInGame(host, game));

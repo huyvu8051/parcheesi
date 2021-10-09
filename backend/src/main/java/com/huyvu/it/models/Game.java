@@ -35,9 +35,7 @@ public class Game {
 
 	private boolean isDiced;
 
-	@ManyToOne
-	@JoinColumn(name = "currentPlayer_id")
-	private Player currentPlayer;
+	private Color currentPlayer;
 
 	@CreatedDate
 	private Date createdDate;
@@ -49,12 +47,12 @@ public class Game {
 	@OneToMany(mappedBy = "primaryKey.game")
 	private List<PlayerGame> playerGames = new ArrayList<>();
 
-	public Game(String name, Status status, Player currentPlayer, Player host) {
+	public Game(String name, Status status, Color currentPlayer, Player host) {
 		this.name = name;
 		this.status = status;
 		this.currentPlayer = currentPlayer;
 		this.host = host;
-		this.diceValue = 0;
+		this.diceValue = 1;
 		this.isDiced = false;
 	}
 

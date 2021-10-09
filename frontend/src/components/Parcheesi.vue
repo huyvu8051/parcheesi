@@ -1,22 +1,27 @@
 <template>
   <v-layout align-center justify-center>
-    <v-flex xs12 sm10 md8 lg6 xl4 blue>
-      <v-row>
-        <v-col cols="12" xs="12" sm="12" md="12">
+    <v-flex xs12 sm8 md6 lg8 xl8 rounded-lg>
+      <v-row align="center" justify="center">
+        <v-col cols="12" xs="12" sm="12" md="12" lg="3" xl="3">
+          <v-row align="center" justify="center">
+            <div v-for="item in game.players" :key="item.player.id">
+              <v-col cols="12" v-if="item.player.username !== $store.state.username">
+                <PlayerInGame :playerGame="item" />
+              </v-col>
+            </div>
+          </v-row>
+        </v-col>
+        <v-col cols="12" xs="12" sm="12" md="12" lg="6" xl="6">
+          <div id="table" :class="toLowerCaseStr(game.currentPlayer)+ ' rounded-xl'" ref="table" />
+        </v-col>
+        <v-col cols="12" xs="12" sm="12" md="6" lg="3" xl="3">
           <Dice />
-          <GameNofication />
-        </v-col>
-        <v-col cols="12" sm="12" md="12">
-          <div id="table" class="green" ref="table" />
-        </v-col>
-        <v-col cols="12" xs="12" sm="12" md="12">
-          <v-btn color="primary" @click="rollDice">ROLL DICE</v-btn>
-        </v-col>
-        <v-col cols="12" xs="12" sm="12" md="12">
-          <v-btn color="primary" @click="startGame">START GAME</v-btn>
         </v-col>
       </v-row>
     </v-flex>
+    <GameNofication />
+    <GameSpeedDial />
+    <DiceFloatButton :game="game" />
   </v-layout>
 </template>
 
@@ -25,14 +30,19 @@ import Dice from "./Dice";
 import GameNofication from "./GameNofication";
 
 import PlayerService from "@/services/Game";
+import PlayerInGame from "@/components/PlayerInGame";
+import GameSpeedDial from "@/components/GameSpeedDial";
+import DiceFloatButton from "@/components/DiceFloatButton";
 export default {
   name: "App",
   components: {
     Dice: Dice,
-    GameNofication: GameNofication
+    GameNofication: GameNofication,
+    PlayerInGame: PlayerInGame,
+    GameSpeedDial: GameSpeedDial,
+    DiceFloatButton: DiceFloatButton
   },
   data: () => ({
-    logger: "Waitting...",
     aGameFields: [
       {
         x: 150,
@@ -427,73 +437,87 @@ export default {
         homepoint: 3
       }
     ],
-    aTokenData: [],
-    players: [],
-    currentPlayer: {},
+    game: {},
     ratio: 0.5
   }),
   // end data
   async created() {
-    window.addEventListener("resize", this.myEventHandler);
+    window.addEventListener("resize", this.resizeWindowEventHandler);
   },
   destroyed() {
-    window.removeEventListener("resize", this.myEventHandler);
+    window.removeEventListener("resize", this.resizeWindowEventHandler);
   },
-  async mounted() {
+  mounted() {
     this.start();
   },
 
   methods: {
-    async startGame() {
-      var response = await PlayerService.startGame({
-        id: this.$route.query.gameId
-      });
+    toLowerCaseStr(str) {
+      try {
+        return str.toLowerCase();
+      } catch (e) {
+        return "null";
+      }
     },
-    async rollDice() {
-      var response = await PlayerService.getIDiced();
-    },
-    myEventHandler(e) {
+    resizeWindowEventHandler(e) {
       this.create();
     },
     async start() {
       await this.loadGame();
-      await this.create();
+      this.create();
       this.connectToSocketIo();
     },
     calculateWidth() {
       this.ratio = this.$refs.table.clientWidth / 900;
+      // console.log(this.ratio);
     },
     connectToSocketIo() {
-      // "http://localhost:8082?gameId="
       var socketurl = this.$baseurl + ":8082?gameId=";
       var socket = io.connect(socketurl + this.$route.query.gameId);
       var that = this;
       socket.on("action", function(data) {
+        that.game = data;
         that.reloadAllToken(data);
         that.players = data.players;
-        console.log("data from socket" + data);
-        that.$eventBus.$emit(
-          "nofication",
-          "Current player is " + data.currentPlayer.username + " (" + data.currentPlayer.username + ")"
-        );
+        that.$eventBus.$emit("nofication", {
+          message:
+            "Current player is " +
+            that.findCurrentPlayerByColor(data.currentPlayer).player.username +
+            " (" +
+            data.currentPlayer +
+            ")"
+        });
       });
+
       socket.on("startGame", function(data) {
-        that.aTokenData = data.tokens;
+        that.game = data;
         that.players = data.players;
         that.create();
-        console.log("data from socket" + data);
+        that.$eventBus.$emit("nofication", {
+            message: "Start game!!!"
+          });
       });
+
       socket.on("dice", function(data) {
-        that.iDiced = data.diceValue;
-        setTimeout(() => {
-          that.$eventBus.$emit(
-          "nofication",
-          "Dice value " + data.diceValue
-        );
-        }, 1000);
+        that.game = data;
         that.$eventBus.$emit("dice", data.diceValue);
         that.reloadAllToken(data);
+        setTimeout(() => {
+          that.$eventBus.$emit("nofication", {
+            message: "Dice value " + data.diceValue
+          });
+        }, 1000);
       });
+
+      socket.on("join", function(data) {
+        that.game = data;
+        that.$eventBus.$emit("nofication", {
+            message: "New player join game " + that.game.players.at(-1).player.username
+          });
+      });
+    },
+    findCurrentPlayerByColor(color) {
+      return this.game.players.find(e => e.color === color);
     },
     reloadAllToken(data) {
       var that = this;
@@ -504,28 +528,27 @@ export default {
     },
     async loadGame() {
       try {
-        // console.log(this.$route.params.game);
-        console.log(this.$route.query.gameId);
-
         var response = await PlayerService.loadGame({
           id: this.$route.query.gameId
         });
-
-        this.aTokenData = response.data.tokens;
-        console.log(response);
+        this.game = response.data;
+        this.$eventBus.$emit("dice", this.game.diceValue);
       } catch (e) {
         console.log(e);
       }
     },
+
+    // on click own token
     async action(oToken) {
       try {
         var response = await PlayerService.action({
           id: oToken.id
         });
-
-        console.log(response);
       } catch (e) {
-        console.log(e);
+        this.$eventBus.$emit("nofication", {
+          message: "Error " + e.response.data,
+          status: "error"
+        });
       }
     },
 
@@ -608,7 +631,7 @@ export default {
 
       field
         .selectAll("token")
-        .data(this.aTokenData)
+        .data(this.game.tokens)
         .enter()
         .append("g")
         .attr("class", function(d) {
@@ -620,18 +643,22 @@ export default {
             d.fieldtype,
             d.fieldnumber
           );
-          console.log(gamefield);
+          // console.log(gamefield);
           return (
             "translate(" + gamefield.x * ratio + "," + gamefield.y * ratio + ")"
           );
         })
         .on("click", function(d) {
-          $.proxy(that.action, that, d)();
+          if (d.playerGame.player.username === that.$store.state.username) {
+            $.proxy(that.action, that, d)();
+          } else {
+            console.log("not your chess");
+          }
         })
         .append("circle")
         .attr("x", 0)
         .attr("y", 0)
-        .attr("r",  30 * ratio)
+        .attr("r", 30 * ratio)
         .style("fill", function(d) {
           return d.playerGame.color;
         })

@@ -1,5 +1,8 @@
 package com.huyvu.it.converter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -17,5 +20,13 @@ public class PlayerGameConverter {
 		dto.setColor(entity.getColor());
 		dto.setPlayer(playerConverter.toDto(entity.getPlayer()));
 		return dto;
+	}
+	public List<PlayerGameDto> toListDto(List<PlayerGame> entities){
+		List<PlayerGameDto> dtos = new ArrayList<>();
+		entities.stream().forEach(e->{
+			dtos.add(toDto(e));
+		});
+		
+		return dtos;
 	}
 }

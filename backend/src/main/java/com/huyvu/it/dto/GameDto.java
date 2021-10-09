@@ -3,6 +3,7 @@ package com.huyvu.it.dto;
 import java.util.Date;
 import java.util.List;
 
+import com.huyvu.it.models.Color;
 import com.huyvu.it.models.Status;
 
 import lombok.AllArgsConstructor;
@@ -21,9 +22,9 @@ public class GameDto {
 	private PlayerDto host;
 	private Date createdDate;
 	
-	private PlayerDto currentPlayer;
+	private Color currentPlayer;
 
-	private List<PlayerDto> players;
+	private List<PlayerGameDto> players;
 
 	private List<TokenDto> tokens;
 

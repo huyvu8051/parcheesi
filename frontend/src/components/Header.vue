@@ -1,33 +1,28 @@
 <template>
-  <v-app-bar app flat dark>
+  <v-app-bar app flat hide-on-scroll>
+     <v-app-bar-nav-icon @click="drawer"></v-app-bar-nav-icon>
     <v-toolbar-title class="text-uppercase grey--text">
       <span>Pacheesi</span>
     </v-toolbar-title>
     <v-spacer></v-spacer>
-	<v-btn text color="grey" v-if="$store.state.isUserLoggedIn">
-      <span>{{$store.state.username}}</span>
-      <v-icon right>account_circle</v-icon>
-    </v-btn>
-    <v-btn text color="grey" v-if="$store.state.isUserLoggedIn" @click="logout">
-      <span>Sign out</span>
-      <v-icon right>logout</v-icon>
-    </v-btn>
+    <AccountPanel/>
   </v-app-bar>
 </template>
 
 <script>
+import AccountPanel from "@/components/AccountPanel";
 export default {
   data: () => ({
     icons: ["mdi-facebook", "mdi-twitter", "mdi-linkedin", "mdi-instagram"]
   }),
+  components: {
+    AccountPanel:AccountPanel
+  },
   methods: {
-    logout() {
-      this.$store.dispatch("setToken", null);
-      this.$store.dispatch("setUsername", null);
-      this.$router.push({
-        name: "login"
-      });
+    drawer(){
+      this.$eventBus.$emit("drawer");
     }
+    
   }
 };
 </script>

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartException;
 
 import com.corundumstudio.socketio.SocketIOServer;
 import com.huyvu.it.dto.GameDto;
@@ -54,7 +55,7 @@ public class GameController {
 	}
 
 	@PostMapping("/action")
-	public ResponseEntity<Object> action(@RequestBody TokenDto token) {
+	public ResponseEntity<Object> action(@RequestBody TokenDto token) throws Exception {
 		try {
 			Player player = (Player) SecurityContextHolder.getContext().getAuthentication()
 					.getPrincipal();
@@ -62,7 +63,8 @@ public class GameController {
 			server.getRoomOperations(String.valueOf(response.getId())).sendEvent("action", response);
 			return ResponseEntity.ok(response);
 		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+			System.out.println(e.getMessage());
+			return ResponseEntity.badRequest().body(e.getMessage());
 		}
 
 	}

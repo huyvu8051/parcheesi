@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import com.huyvu.it.dto.GameDto;
 import com.huyvu.it.dto.PlayerDto;
+import com.huyvu.it.dto.PlayerGameDto;
 import com.huyvu.it.dto.TokenDto;
 import com.huyvu.it.models.Game;
 import com.huyvu.it.models.PlayerGame;
@@ -22,6 +23,9 @@ public class GameConverter {
 
 	@Autowired
 	private PlayerConverter playerConverter;
+	
+	@Autowired
+	private PlayerGameConverter playerGameConverter;
 	
 	@Autowired
 	private TokenRepository tokenRepository;
@@ -39,9 +43,7 @@ public class GameConverter {
 		
 		
 		
-		dto.setCurrentPlayer(playerConverter.toDto(entity.getCurrentPlayer()));
-		
-		List<PlayerGame> playerGames = entity.getPlayerGames();
+		dto.setCurrentPlayer((entity.getCurrentPlayer()));
 		
 		List<Token> tokens = tokenRepository.findAllByPlayerGamePrimaryKeyGameId(entity.getId());
 		
@@ -49,7 +51,7 @@ public class GameConverter {
 		
 		dto.setTokens(tokenDtos);
 		
-		List<PlayerDto> players = playerConverter.toListDto(entity.getPlayerGames());
+		List<PlayerGameDto> players = playerGameConverter.toListDto(entity.getPlayerGames());
 		dto.setPlayers(players);
 		return dto;
 

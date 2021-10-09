@@ -36,23 +36,20 @@ public class PlayerService {
 	}
 
 	public GameDto join(GameDto gameDto, Player player) throws Exception {
-		
+
 		Game game = gameRepository.findOneById(gameDto.getId());
-		
-		if(!game.getStatus().equals(Status.WAITING)){
+
+		if (!isPlayerInGame(player, game)
+				&& (!game.getStatus().equals(Status.WAITING) || game.getPlayerGames().size() >= 4)) {
 			throw new Exception("Game not available!");
-		}
-		
-		if (!isPlayerInGame(player, game)) {
-			if (game.getPlayerGames().size() >= 4) {
-				throw new Exception("Slot is full!");
-			}
 		}
 
 		PlayerGame playerGame = playerGameRepository.save(createNewPlayerInGame(player, game));
 
 		Game entity = playerGame.getGame();
 
+		entity.getPlayerGames().add(playerGame);
+		
 		GameDto result = gameConverter.toDto(entity);
 
 		return result;

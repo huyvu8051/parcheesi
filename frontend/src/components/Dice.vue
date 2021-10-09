@@ -1,52 +1,47 @@
 <template>
-  <v-layout align-center justify-center yellow>
-    <v-flex xs12 sm12 md8 pink>
-      
-      <div class="dice purple">
-        <ol class="die-list even-roll" data-roll="1" id="die-1">
-          <li class="die-item" data-side="1">
-            <span class="dot"></span>
-          </li>
-          <li class="die-item" data-side="2">
-            <span class="dot"></span>
-            <span class="dot"></span>
-          </li>
-          <li class="die-item" data-side="3">
-            <span class="dot"></span>
-            <span class="dot"></span>
-            <span class="dot"></span>
-          </li>
-          <li class="die-item" data-side="4">
-            <span class="dot"></span>
-            <span class="dot"></span>
-            <span class="dot"></span>
-            <span class="dot"></span>
-          </li>
-          <li class="die-item" data-side="5">
-            <span class="dot"></span>
-            <span class="dot"></span>
-            <span class="dot"></span>
-            <span class="dot"></span>
-            <span class="dot"></span>
-          </li>
-          <li class="die-item" data-side="6">
-            <span class="dot"></span>
-            <span class="dot"></span>
-            <span class="dot"></span>
-            <span class="dot"></span>
-            <span class="dot"></span>
-            <span class="dot"></span>
-          </li>
-        </ol>
-      </div>
-    </v-flex>
-  </v-layout>
+  <div class="dice rounded-lg">
+    <ol class="die-list even-roll" data-roll="1" id="die-1">
+      <li class="die-item" data-side="1">
+        <span class="dot"></span>
+      </li>
+      <li class="die-item" data-side="2">
+        <span class="dot"></span>
+        <span class="dot"></span>
+      </li>
+      <li class="die-item" data-side="3">
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+      </li>
+      <li class="die-item" data-side="4">
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+      </li>
+      <li class="die-item" data-side="5">
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+      </li>
+      <li class="die-item" data-side="6">
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+      </li>
+    </ol>
+  </div>
 </template>
 
 <script>
 import playerService from "@/services/Game";
 export default {
-  created: function() {
+  created() {
     this.$eventBus.$on("dice", diceValue => {
       const dice = [...document.querySelectorAll(".die-list")];
       dice.forEach(die => {

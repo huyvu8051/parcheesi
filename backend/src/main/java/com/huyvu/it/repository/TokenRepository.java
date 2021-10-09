@@ -14,7 +14,7 @@ public interface TokenRepository extends JpaRepository<Token, Integer> {
 
 	Token findOneById(int id);
 
-	Token findOneByFieldtypeAndFieldNumber(FieldType waypoint, int desFieldnumber);
+	Token findOneByFieldtypeAndFieldNumberAndPlayerGamePrimaryKeyGameId(FieldType waypoint, int desFieldnumber, int gameId);
 
 
 }
