@@ -12,7 +12,7 @@
         <v-list>
           <v-list-item>
             <v-list-item-avatar>
-              <img src="https://scontent.fdad3-5.fna.fbcdn.net/v/t39.30808-6/241513023_373008717701275_8943884806369202350_n.jpg?_nc_cat=106&ccb=1-5&_nc_sid=09cbfe&_nc_ohc=OKfMrny91QAAX98rfDw&_nc_ht=scontent.fdad3-5.fna&oh=7856ac7b134bf9fb43109438437cee76&oe=61658070" alt="John" />
+              <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John" />
             </v-list-item-avatar>
 
             <v-list-item-content>

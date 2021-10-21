@@ -30,6 +30,9 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
+          <a href="/oauth2/authorization/facebook"
+            >Login with Facebook</a
+          >
           <v-btn color="primary" @click="login">Login</v-btn>
         </v-card-actions>
       </v-card>
@@ -43,14 +46,14 @@ export default {
   data: () => ({
     valid: false,
     username: "",
-    password: ""
+    password: "",
   }),
   methods: {
     async login() {
       try {
         const response = await AuthenticationService.login({
           username: this.username,
-          password: this.password
+          password: this.password,
         });
         console.log("response==========", response);
         this.$store.dispatch("setToken", "Bearer " + response.data.token);
@@ -62,7 +65,7 @@ export default {
         console.log(this.$store.state.username);
 
         this.$router.push({
-          name: "game"
+          name: "game",
         });
       } catch (error) {
         this.error = error;
@@ -71,12 +74,12 @@ export default {
     async createGame() {
       try {
         this.$router.push({
-          name: "parcheesi"
+          name: "parcheesi",
         });
       } catch (error) {
         console.log(error);
       }
-    }
-  }
+    },
+  },
 };
 </script>

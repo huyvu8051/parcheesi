@@ -1,24 +1,32 @@
 <template>
-  <v-layout align-center justify-center>
+  <v-layout align-center justify-center cyan rounded-xl>
     <v-flex xs12 sm8 md6 lg8 xl8 rounded-lg>
       <v-row align="center" justify="center">
         <v-col cols="12" xs="12" sm="12" md="12" lg="3" xl="3">
           <v-row align="center" justify="center">
             <div v-for="item in game.players" :key="item.player.id">
-              <v-col cols="12" v-if="item.player.username !== $store.state.username">
+              <v-col
+                cols="12"
+                v-if="item.player.username !== $store.state.username"
+              >
                 <PlayerInGame :playerGame="item" />
               </v-col>
             </div>
           </v-row>
         </v-col>
         <v-col cols="12" xs="12" sm="12" md="12" lg="6" xl="6">
-          <div id="table" :class="toLowerCaseStr(game.currentPlayer)+ ' rounded-xl'" ref="table" />
+          <div
+            id="table"
+            :class="toLowerCaseStr(game.currentPlayer) + ' rounded-xl'"
+            ref="table"
+          />
         </v-col>
         <v-col cols="12" xs="12" sm="12" md="6" lg="3" xl="3">
           <Dice />
         </v-col>
       </v-row>
     </v-flex>
+    <ScoreBoard v-if="isGameEnded()" :players="game.players" />
     <GameNofication />
     <GameSpeedDial />
     <DiceFloatButton :game="game" />
@@ -31,6 +39,7 @@ import GameNofication from "./GameNofication";
 
 import PlayerService from "@/services/Game";
 import PlayerInGame from "@/components/PlayerInGame";
+import ScoreBoard from "@/components/ScoreBoard";
 import GameSpeedDial from "@/components/GameSpeedDial";
 import DiceFloatButton from "@/components/DiceFloatButton";
 export default {
@@ -40,7 +49,8 @@ export default {
     GameNofication: GameNofication,
     PlayerInGame: PlayerInGame,
     GameSpeedDial: GameSpeedDial,
-    DiceFloatButton: DiceFloatButton
+    DiceFloatButton: DiceFloatButton,
+    ScoreBoard: ScoreBoard,
   },
   data: () => ({
     aGameFields: [
@@ -49,396 +59,396 @@ export default {
         y: 150,
         color: "RED",
         radius: 40,
-        homepoint: 3
+        homepoint: 3,
       },
       {
         x: 850,
         y: 150,
         color: "BLUE",
         radius: 40,
-        homepoint: 1
+        homepoint: 1,
       },
       {
         x: 50,
         y: 250,
         color: "RED",
         radius: 40,
-        homepoint: 1
+        homepoint: 1,
       },
       {
         x: 50,
         y: 150,
         color: "RED",
         radius: 40,
-        homepoint: 2
+        homepoint: 2,
       },
       {
         x: 350,
         y: 150,
         color: "WHITE",
         radius: 40,
-        waypoint: 30
+        waypoint: 30,
       },
       {
         x: 450,
         y: 150,
         color: "WHITE",
         radius: 40,
-        waypoint: 31
+        waypoint: 31,
       },
       {
         x: 550,
         y: 150,
         color: "WHITE",
         radius: 40,
-        waypoint: 0
+        waypoint: 0,
       },
       {
         x: 750,
         y: 150,
         color: "BLUE",
         radius: 40,
-        homepoint: 2
+        homepoint: 2,
       },
       {
         x: 850,
         y: 250,
         color: "BLUE",
         radius: 40,
-        homepoint: 3
+        homepoint: 3,
       },
       {
         x: 350,
         y: 250,
         color: "WHITE",
         radius: 40,
-        waypoint: 29
+        waypoint: 29,
       },
       {
         x: 450,
         y: 250,
         color: "BLUE",
         radius: 40,
-        finishpoint: 1
+        finishpoint: 1,
       },
       {
         x: 550,
         y: 250,
         color: "WHITE",
         radius: 40,
-        waypoint: 1
+        waypoint: 1,
       },
       {
         x: 350,
         y: 350,
         color: "WHITE",
         radius: 40,
-        waypoint: 28
+        waypoint: 28,
       },
       {
         x: 450,
         y: 350,
         color: "BLUE",
         radius: 40,
-        finishpoint: 2
+        finishpoint: 2,
       },
       {
         x: 550,
         y: 350,
         color: "WHITE",
         radius: 40,
-        waypoint: 2
+        waypoint: 2,
       },
       {
         x: 50,
         y: 450,
         color: "WHITE",
         radius: 40,
-        waypoint: 24
+        waypoint: 24,
       },
       {
         x: 150,
         y: 450,
         color: "WHITE",
         radius: 40,
-        waypoint: 25
+        waypoint: 25,
       },
       {
         x: 250,
         y: 450,
         color: "WHITE",
         radius: 40,
-        waypoint: 26
+        waypoint: 26,
       },
       {
         x: 350,
         y: 450,
         color: "WHITE",
         radius: 40,
-        waypoint: 27
+        waypoint: 27,
       },
       {
         x: 450,
         y: 450,
         color: "BLUE",
         radius: 40,
-        finishpoint: 3
+        finishpoint: 3,
       },
       {
         x: 550,
         y: 450,
         color: "WHITE",
         radius: 40,
-        waypoint: 3
+        waypoint: 3,
       },
       {
         x: 650,
         y: 450,
         color: "WHITE",
         radius: 40,
-        waypoint: 4
+        waypoint: 4,
       },
       {
         x: 750,
         y: 450,
         color: "WHITE",
         radius: 40,
-        waypoint: 5
+        waypoint: 5,
       },
       {
         x: 850,
         y: 450,
         color: "WHITE",
         radius: 40,
-        waypoint: 6
+        waypoint: 6,
       },
       {
         x: 50,
         y: 550,
         color: "WHITE",
         radius: 40,
-        waypoint: 23
+        waypoint: 23,
       },
       {
         x: 150,
         y: 550,
         color: "RED",
         radius: 40,
-        finishpoint: 1
+        finishpoint: 1,
       },
       {
         x: 250,
         y: 550,
         color: "RED",
         radius: 40,
-        finishpoint: 2
+        finishpoint: 2,
       },
       {
         x: 350,
         y: 550,
         color: "RED",
         radius: 40,
-        finishpoint: 3
+        finishpoint: 3,
       },
       {
         x: 550,
         y: 550,
         color: "GREEN",
         radius: 40,
-        finishpoint: 3
+        finishpoint: 3,
       },
       {
         x: 650,
         y: 550,
         color: "GREEN",
         radius: 40,
-        finishpoint: 2
+        finishpoint: 2,
       },
       {
         x: 750,
         y: 550,
         color: "GREEN",
         radius: 40,
-        finishpoint: 1
+        finishpoint: 1,
       },
       {
         x: 850,
         y: 550,
         color: "WHITE",
         radius: 40,
-        waypoint: 7
+        waypoint: 7,
       },
       {
         x: 50,
         y: 650,
         color: "WHITE",
         radius: 40,
-        waypoint: 22
+        waypoint: 22,
       },
       {
         x: 150,
         y: 650,
         color: "WHITE",
         radius: 40,
-        waypoint: 21
+        waypoint: 21,
       },
       {
         x: 250,
         y: 650,
         color: "WHITE",
         radius: 40,
-        waypoint: 20
+        waypoint: 20,
       },
       {
         x: 350,
         y: 650,
         color: "WHITE",
         radius: 40,
-        waypoint: 19
+        waypoint: 19,
       },
       {
         x: 450,
         y: 650,
         color: "YELLOW",
         radius: 40,
-        finishpoint: 3
+        finishpoint: 3,
       },
       {
         x: 550,
         y: 650,
         color: "WHITE",
         radius: 40,
-        waypoint: 11
+        waypoint: 11,
       },
       {
         x: 650,
         y: 650,
         color: "WHITE",
         radius: 40,
-        waypoint: 10
+        waypoint: 10,
       },
       {
         x: 750,
         y: 650,
         color: "WHITE",
         radius: 40,
-        waypoint: 9
+        waypoint: 9,
       },
       {
         x: 850,
         y: 650,
         color: "WHITE",
         radius: 40,
-        waypoint: 8
+        waypoint: 8,
       },
       {
         x: 350,
         y: 750,
         color: "WHITE",
         radius: 40,
-        waypoint: 18
+        waypoint: 18,
       },
       {
         x: 450,
         y: 750,
         color: "YELLOW",
         radius: 40,
-        finishpoint: 2
+        finishpoint: 2,
       },
       {
         x: 550,
         y: 750,
         color: "WHITE",
         radius: 40,
-        waypoint: 12
+        waypoint: 12,
       },
       {
         x: 350,
         y: 850,
         color: "WHITE",
         radius: 40,
-        waypoint: 17
+        waypoint: 17,
       },
       {
         x: 450,
         y: 850,
         color: "YELLOW",
         radius: 40,
-        finishpoint: 1
+        finishpoint: 1,
       },
       {
         x: 550,
         y: 850,
         color: "WHITE",
         radius: 40,
-        waypoint: 13
+        waypoint: 13,
       },
       {
         x: 50,
         y: 950,
         color: "YELLOW",
         radius: 40,
-        homepoint: 3
+        homepoint: 3,
       },
       {
         x: 50,
         y: 850,
         color: "YELLOW",
         radius: 40,
-        homepoint: 2
+        homepoint: 2,
       },
       {
         x: 350,
         y: 950,
         color: "WHITE",
         radius: 40,
-        waypoint: 16
+        waypoint: 16,
       },
       {
         x: 450,
         y: 950,
         color: "WHITE",
         radius: 40,
-        waypoint: 15
+        waypoint: 15,
       },
       {
         x: 550,
         y: 950,
         color: "WHITE",
         radius: 40,
-        waypoint: 14
+        waypoint: 14,
       },
       {
         x: 750,
         y: 950,
         color: "GREEN",
         radius: 40,
-        homepoint: 2
+        homepoint: 2,
       },
       {
         x: 850,
         y: 850,
         color: "GREEN",
         radius: 40,
-        homepoint: 1
+        homepoint: 1,
       },
       {
         x: 150,
         y: 950,
         color: "YELLOW",
         radius: 40,
-        homepoint: 1
+        homepoint: 1,
       },
       {
         x: 850,
         y: 950,
         color: "GREEN",
         radius: 40,
-        homepoint: 3
-      }
+        homepoint: 3,
+      },
     ],
     game: {},
-    ratio: 0.5
+    ratio: 0.5,
   }),
   // end data
   async created() {
@@ -452,6 +462,7 @@ export default {
   },
 
   methods: {
+   
     toLowerCaseStr(str) {
       try {
         return str.toLowerCase();
@@ -469,13 +480,13 @@ export default {
     },
     calculateWidth() {
       this.ratio = this.$refs.table.clientWidth / 900;
-      // console.log(this.ratio);
+      console.log(this.ratio);
     },
     connectToSocketIo() {
       var socketurl = this.$baseurl + ":8082?gameId=";
       var socket = io.connect(socketurl + this.$route.query.gameId);
       var that = this;
-      socket.on("action", function(data) {
+      socket.on("action", function (data) {
         that.game = data;
         that.reloadAllToken(data);
         that.players = data.players;
@@ -485,51 +496,52 @@ export default {
             that.findCurrentPlayerByColor(data.currentPlayer).player.username +
             " (" +
             data.currentPlayer +
-            ")"
+            ")",
         });
       });
 
-      socket.on("startGame", function(data) {
+      socket.on("startGame", function (data) {
         that.game = data;
         that.players = data.players;
         that.create();
         that.$eventBus.$emit("nofication", {
-            message: "Start game!!!"
-          });
+          message: "Start game!!!",
+        });
       });
 
-      socket.on("dice", function(data) {
+      socket.on("dice", function (data) {
         that.game = data;
         that.$eventBus.$emit("dice", data.diceValue);
         that.reloadAllToken(data);
         setTimeout(() => {
           that.$eventBus.$emit("nofication", {
-            message: "Dice value " + data.diceValue
+            message: "Dice value " + data.diceValue,
           });
         }, 1000);
       });
 
-      socket.on("join", function(data) {
+      socket.on("join", function (data) {
         that.game = data;
         that.$eventBus.$emit("nofication", {
-            message: "New player join game " + that.game.players.at(-1).player.username
-          });
+          message:
+            "New player join game " + that.game.players.at(-1).player.username,
+        });
       });
     },
     findCurrentPlayerByColor(color) {
-      return this.game.players.find(e => e.color === color);
+      return this.game.players.find((e) => e.color === color);
     },
     reloadAllToken(data) {
       var that = this;
 
-      data.tokens.forEach(e => {
+      data.tokens.forEach((e) => {
         that.jump(e);
       });
     },
     async loadGame() {
       try {
         var response = await PlayerService.loadGame({
-          id: this.$route.query.gameId
+          id: this.$route.query.gameId,
         });
         this.game = response.data;
         this.$eventBus.$emit("dice", this.game.diceValue);
@@ -542,14 +554,18 @@ export default {
     async action(oToken) {
       try {
         var response = await PlayerService.action({
-          id: oToken.id
+          id: oToken.id,
         });
       } catch (e) {
         this.$eventBus.$emit("nofication", {
           message: "Error " + e.response.data,
-          status: "error"
+          status: "error",
         });
       }
+    },
+
+    isGameEnded() {
+      return this.game.status === "CLOSED";
     },
 
     // oToken must have id
@@ -569,7 +585,7 @@ export default {
         .transition()
         .ease("back")
         .duration(500)
-        .attr("transform", function(d) {
+        .attr("transform", function (d) {
           return "translate(" + oToken.x * ratio + "," + oToken.y * ratio + ")";
         });
     },
@@ -599,26 +615,58 @@ export default {
         .data(this.aGameFields)
         .enter()
         .append("g")
-        .attr("transform", function(d) {
+        .attr("transform", function (d) {
           return "translate(" + d.x * ratio + "," + d.y * ratio + ")";
         });
 
       oGroupSelection
         .append("circle")
-        .attr("r", function(d) {
+        .attr("r", function (d) {
           return d.radius * ratio;
         })
-        .style("fill", function(d) {
+        .style("fill", function (d) {
           return d.color;
         })
-        .style("stroke-width", 2 * ratio)
-        .style("stroke", "grey");
+        .style("stroke-width", (d) => {
+          switch (d.waypoint) {
+            case 0:
+            case 8:
+            case 16:
+            case 24:
+              return 6 * ratio;
+              break;
+
+            default:
+              return 2 * ratio;
+              break;
+          }
+        })
+        .style("stroke", (d) => {
+          switch (d.waypoint) {
+            case 0:
+              return "blue";
+              break;
+            case 8:
+              return "green";
+              break;
+            case 16:
+              return "yellow";
+              break;
+            case 24:
+              return "red";
+              break;
+
+            default:
+              return "grey";
+              break;
+          }
+        });
 
       oGroupSelection
         .append("text")
         .attr("cx", 50)
         .attr("cy", 50)
-        .text(function(d) {
+        .text(function (d) {
           return d.waypoint || d.homepoint || d.finishpoint || 0;
         })
         .attr("font-family", "sans-serif")
@@ -634,10 +682,10 @@ export default {
         .data(this.game.tokens)
         .enter()
         .append("g")
-        .attr("class", function(d) {
+        .attr("class", function (d) {
           return "id" + d.id;
         })
-        .attr("transform", function(d) {
+        .attr("transform", function (d) {
           var gamefield = that.getGameField(
             d.color,
             d.fieldtype,
@@ -648,23 +696,26 @@ export default {
             "translate(" + gamefield.x * ratio + "," + gamefield.y * ratio + ")"
           );
         })
-        .on("click", function(d) {
+        .on("click", function (d) {
           if (d.playerGame.player.username === that.$store.state.username) {
             $.proxy(that.action, that, d)();
           } else {
-            console.log("not your chess");
+            that.$eventBus.$emit("nofication", {
+              message: "Not your chess",
+              status: "error",
+            });
           }
         })
         .append("circle")
         .attr("x", 0)
         .attr("y", 0)
         .attr("r", 30 * ratio)
-        .style("fill", function(d) {
+        .style("fill", function (d) {
           return d.playerGame.color;
         })
         .style("stroke-width", 5 * ratio)
         .style("stroke", "black")
-        .select(function() {
+        .select(function () {
           return this.parentNode;
         })
         .append("image")
@@ -679,7 +730,7 @@ export default {
     getGameField(color, fieldtype, fieldnumber) {
       var gamefield = null;
 
-      this.aGameFields.forEach(e => {
+      this.aGameFields.forEach((e) => {
         if (
           e[fieldtype.toLowerCase()] !== undefined &&
           e.color === color &&
@@ -690,8 +741,8 @@ export default {
         }
       });
       return gamefield;
-    }
-  }
+    },
+  },
 };
 </script>
 

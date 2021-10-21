@@ -27,7 +27,7 @@
             <v-icon right>unpublished</v-icon>
           </v-chip>
         </template>
-        <template v-slot:[`item.createdDat`]="{ item }">{{formatDate(item.createdDate)}}</template>
+        <template v-slot:[`item.createdDate`]="{ item }">{{formatDate(item.createdDate)}}</template>
         <template v-slot:top>
           <v-toolbar flat>
             <v-toolbar-title>LIST GAME</v-toolbar-title>
@@ -83,7 +83,7 @@
         <template v-slot:no-data>
           <v-btn color="primary" @click="initialize">Reset</v-btn>
         </template>
-        <template v-slot:item.actions="{ item }">
+        <template v-slot:[`item.actions`]="{ item }">
           <v-icon small class="mr-2" @click="play(item)">play_arrow</v-icon>
         </template>
       </v-data-table>
@@ -220,6 +220,7 @@ export default {
     },
     formatDate(s) {
       var date = new Date(s);
+      
       return date.toLocaleString();
     }
   }
