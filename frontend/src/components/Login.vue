@@ -52,7 +52,7 @@ export default {
           username: this.username,
           password: this.password,
         });
-        console.log("response==========", response);
+        //console.log("response==========", response);
         this.$store.dispatch("setToken", "Bearer " + response.data.token);
         this.$store.dispatch("setUsername", response.data.username);
         this.$store.dispatch("setRoles", response.data.roles); 
