@@ -6,8 +6,6 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
@@ -26,9 +24,6 @@ public class Player implements UserDetails {
 	@GeneratedValue
 	private int id;
 
-	@Enumerated(EnumType.STRING)
-	private Provider provider;
-
 	@Column(unique = true)
 	private String username;
 
@@ -44,7 +39,8 @@ public class Player implements UserDetails {
 		this.username = username;
 		this.password = password;
 	}
-
+	
+	
 	@Override
 	public boolean equals(Object obj) {
 
@@ -52,7 +48,7 @@ public class Player implements UserDetails {
 
 		return getId() == player.getId();
 	}
-
+	
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return null;

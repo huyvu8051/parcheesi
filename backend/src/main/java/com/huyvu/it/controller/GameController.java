@@ -4,21 +4,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartException;
 
 import com.corundumstudio.socketio.SocketIOServer;
 import com.huyvu.it.dto.GameDto;
 import com.huyvu.it.dto.TokenDto;
 import com.huyvu.it.models.Player;
-import com.huyvu.it.service.IGameService;
+import com.huyvu.it.service.impl.GameServiceImpl;
 
 @RestController
 public class GameController {
 	@Autowired
-	private IGameService gameService;
+	private GameServiceImpl gameServiceImpl;
 	
 	@Autowired
 	private SocketIOServer server;
@@ -29,7 +31,7 @@ public class GameController {
 
 			Player player = (Player) SecurityContextHolder.getContext().getAuthentication()
 					.getPrincipal();
-			GameDto gameDto = gameService.dice(player);
+			GameDto gameDto = gameServiceImpl.dice(player);
 			
 			server.getRoomOperations(String.valueOf(gameDto.getId())).sendEvent("dice", gameDto);
 			
@@ -44,7 +46,7 @@ public class GameController {
 		try {
 			Player player = (Player) SecurityContextHolder.getContext().getAuthentication()
 					.getPrincipal();
-			GameDto response = gameService.loadGame(gameDto, player);
+			GameDto response = gameServiceImpl.loadGame(gameDto, player);
 			return ResponseEntity.ok(response);
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
@@ -57,7 +59,7 @@ public class GameController {
 		try {
 			Player player = (Player) SecurityContextHolder.getContext().getAuthentication()
 					.getPrincipal();
-			GameDto response = gameService.action(token, player);
+			GameDto response = gameServiceImpl.action(token, player);
 			server.getRoomOperations(String.valueOf(response.getId())).sendEvent("action", response);
 			return ResponseEntity.ok(response);
 		} catch (Exception e) {
@@ -71,7 +73,7 @@ public class GameController {
 		try {
 			Player player = (Player) SecurityContextHolder.getContext().getAuthentication()
 					.getPrincipal();
-			GameDto response = gameService.start(gameDto, player);
+			GameDto response = gameServiceImpl.start(gameDto, player);
 			server.getRoomOperations(String.valueOf(response.getId())).sendEvent("startGame", response);
 			return ResponseEntity.ok(response);
 		} catch (Exception e) {

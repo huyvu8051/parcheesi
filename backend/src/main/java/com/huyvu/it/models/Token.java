@@ -24,11 +24,11 @@ public class Token {
 	private int fieldNumber;
 	private FieldType fieldtype;
 
-	// identify the number of home field when start
+	// indentify the number of home field when being striked
 	private int homeFieldnumber;
 
 	@ManyToOne
-	@JoinColumns({ @JoinColumn(name = "player_id"), @JoinColumn(name = "game_id") })
+	@JoinColumns({ @JoinColumn(name = "game_id"), @JoinColumn(name = "player_id") })
 	private PlayerGame playerGame;
 
 	public Token(Color color, int fieldNumber, FieldType fieldtype, int homeFieldnumber, PlayerGame playerGame) {
@@ -38,33 +38,10 @@ public class Token {
 		this.playerGame = playerGame;
 		this.homeFieldnumber = homeFieldnumber;
 	}
-	
-	public Token(Color color, int fieldNumber, FieldType fieldtype) {
+
+	public Token(Color color, int fieldNumber, FieldType fieldType) {
 		this.color = color;
 		this.fieldNumber = fieldNumber;
-		this.fieldtype = fieldtype;
-	}
-
-	/**
-	 * Clone
-	 * 
-	 * @param token
-	 */
-	public Token(Token token) {
-		this.color = token.color;
-		this.fieldNumber = token.fieldNumber;
-		this.fieldtype = token.getFieldtype();
-		this.homeFieldnumber = token.homeFieldnumber;
-	}
-
-	/**
-	 * compare color, field number and field type
-	 *
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		Token token = (Token) obj;
-		return (this.color.equals(token.getColor()) && this.fieldNumber == token.fieldNumber
-				&& this.fieldtype.equals(token.getFieldtype()));
+		this.fieldtype = fieldType;
 	}
 }

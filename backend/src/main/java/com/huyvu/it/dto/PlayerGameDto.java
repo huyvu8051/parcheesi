@@ -8,7 +8,7 @@ import lombok.Data;
 
 @Data
 public class PlayerGameDto {
-	private Date finishDate;
 	private Color color;
 	private PlayerDto player;
+	private Date finishDate;
 }

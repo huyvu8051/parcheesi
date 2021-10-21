@@ -19,10 +19,12 @@ import javax.persistence.Transient;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@Data
 @Entity
 @NoArgsConstructor
 @AssociationOverrides({ @AssociationOverride(name = "primaryKey.player", joinColumns = @JoinColumn(name = "player_id")),
@@ -31,33 +33,24 @@ import lombok.Setter;
 public class PlayerGame {
 
 	@EmbeddedId
-	@Getter
 	private PlayerGameId primaryKey = new PlayerGameId();
 
-	@Getter
-	@Setter
 	private boolean isLogin;
-	
-	@Getter
-	@Setter
+
 	private Date finishDate;
 
-	@Getter
-	@Setter
 	@Column(updatable = false)
 	private Color color;
 
-	@Getter
-	@Setter
 	@Column(updatable = false)
 	@CreatedDate
 	private Date createdDate;
 
-	@OneToMany(fetch = FetchType.LAZY)
-	@JoinColumns({ @JoinColumn(name = "player_id"),
-			@JoinColumn(name = "game_id") })
 	@Getter
 	@Setter
+	@OneToMany
+	@JoinColumns({ @JoinColumn(name = "game_id", referencedColumnName = "game_id"),
+			@JoinColumn(name = "player_id", referencedColumnName = "player_id") })
 	private List<Token> tokens = new ArrayList<>();
 
 	@Override
@@ -85,7 +78,6 @@ public class PlayerGame {
 	public void setGame(Game game) {
 		getPrimaryKey().setGame(game);
 	}
-
 
 	public PlayerGame(Player player, Game game, boolean isLogin, Color color) {
 		primaryKey.setPlayer(player);

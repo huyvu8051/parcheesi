@@ -28,7 +28,7 @@ import com.huyvu.it.models.Token;
 import com.huyvu.it.repository.GameRepository;
 import com.huyvu.it.repository.PlayerGameRepository;
 import com.huyvu.it.repository.TokenRepository;
-import com.huyvu.it.service.IGameService;
+import com.huyvu.it.service.GameService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -38,7 +38,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @Service
-public class GameService implements IGameService {
+public class GameServiceImpl implements GameService {
 
 	@Autowired
 	private TokenRepository tokenRepository;
@@ -665,3 +665,4 @@ public class GameService implements IGameService {
 	}
 
 }
+

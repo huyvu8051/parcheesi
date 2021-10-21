@@ -17,9 +17,9 @@ public class PlayerGameConverter {
 	
 	public PlayerGameDto toDto(PlayerGame entity) {
 		PlayerGameDto dto = new PlayerGameDto();
-		dto.setFinishDate(entity.getFinishDate());
 		dto.setColor(entity.getColor());
 		dto.setPlayer(playerConverter.toDto(entity.getPlayer()));
+		dto.setFinishDate(entity.getFinishDate());
 		return dto;
 	}
 	public List<PlayerGameDto> toListDto(List<PlayerGame> entities){

@@ -13,14 +13,11 @@ import com.huyvu.it.models.PlayerGame;
 
 public interface PlayerGameRepository extends JpaRepository<PlayerGame, Integer> {
 	@Query("Select u from PlayerGame u where u.primaryKey.player.id = :id  order by u.createdDate desc")
-	Page<PlayerGame> findfirstByPlayerIdOrderByCreatedDateDesc(@Param("id") int id, Pageable pageable);
-
-	PlayerGame findOneByPrimaryKeyGameIdAndPrimaryKeyPlayerId(int gameId, int playerId);
+	Page<PlayerGame> findfirstByPlayerIdOrderByCreatedDateDesc(@Param("id") int id, Pageable limit);
 
 	List<PlayerGame> findAllByPrimaryKeyGameId(int id);
 
-	List<PlayerGame> findAllByPrimaryKeyGame(Game game);
-
 	List<PlayerGame> findAllByPrimaryKeyGameAndFinishDateIsNull(Game game);
+
 
 }

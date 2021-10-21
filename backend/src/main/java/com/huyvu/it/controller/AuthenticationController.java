@@ -27,12 +27,16 @@ public class AuthenticationController {
 
 	@Autowired
 	private jwtUtil jwtUtil;
+	
+	@GetMapping("/concu")
+	public String concu() {
+		return "concu";
+	}
 
 	@GetMapping("/hello")
 	public String hello() {
-		//UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		//return userDetails.getUsername();
-		return "concu";
+		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		return userDetails.getUsername();
 	}
 
 	@PostMapping("/authentication")
