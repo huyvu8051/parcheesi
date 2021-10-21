@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.huyvu.it.dto.GameDto;
 import com.huyvu.it.models.Player;
-import com.huyvu.it.service.HostService;
+import com.huyvu.it.service.impl.HostService;
 
 @RestController
 public class HostController {

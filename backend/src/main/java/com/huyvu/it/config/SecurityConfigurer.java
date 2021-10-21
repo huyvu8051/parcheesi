@@ -8,13 +8,12 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.huyvu.it.filter.JwtRequestFilter;
-import com.huyvu.it.service.MyUserDetailsService;
-
+import com.huyvu.it.service.impl.MyUserDetailsService;
 @EnableWebSecurity
 public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 	@Autowired
@@ -22,6 +21,7 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private JwtRequestFilter jwtRequestFilter;
+	
 
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -31,12 +31,12 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 
-		http.cors()
-		.and().csrf().disable().authorizeRequests().antMatchers("/authentication").permitAll()
-		.anyRequest().authenticated()
-		.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+		http.cors().and().csrf().disable().authorizeRequests().antMatchers("/authentication","/hello").permitAll().anyRequest()
+				.authenticated().and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+	
 	}
+
 
 	@Override
 	@Bean
@@ -46,6 +46,6 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {
-		return NoOpPasswordEncoder.getInstance();
+		return new BCryptPasswordEncoder();
 	}
 }

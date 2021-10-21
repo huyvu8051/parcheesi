@@ -36,7 +36,7 @@ public class Game {
 	private boolean isDiced;
 
 	private Color currentPlayer;
-
+	
 	@CreatedDate
 	private Date createdDate;
 

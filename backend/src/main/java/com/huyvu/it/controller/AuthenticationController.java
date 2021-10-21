@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.huyvu.it.dto.AuthenticationRequest;
 import com.huyvu.it.dto.AuthenticationResponse;
-import com.huyvu.it.service.MyUserDetailsService;
+import com.huyvu.it.service.impl.MyUserDetailsService;
 import com.huyvu.it.utils.jwtUtil;
 
 @RestController
@@ -27,16 +27,12 @@ public class AuthenticationController {
 
 	@Autowired
 	private jwtUtil jwtUtil;
-	
-	@GetMapping("/concu")
-	public String concu() {
-		return "concu";
-	}
 
 	@GetMapping("/hello")
 	public String hello() {
-		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		return userDetails.getUsername();
+		//UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		//return userDetails.getUsername();
+		return "concu";
 	}
 
 	@PostMapping("/authentication")

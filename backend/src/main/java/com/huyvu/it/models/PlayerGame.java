@@ -12,6 +12,7 @@ import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 
@@ -33,7 +34,13 @@ public class PlayerGame {
 	@Getter
 	private PlayerGameId primaryKey = new PlayerGameId();
 
+	@Getter
+	@Setter
 	private boolean isLogin;
+	
+	@Getter
+	@Setter
+	private Date finishDate;
 
 	@Getter
 	@Setter
@@ -45,6 +52,13 @@ public class PlayerGame {
 	@Column(updatable = false)
 	@CreatedDate
 	private Date createdDate;
+
+	@OneToMany(fetch = FetchType.LAZY)
+	@JoinColumns({ @JoinColumn(name = "player_id"),
+			@JoinColumn(name = "game_id") })
+	@Getter
+	@Setter
+	private List<Token> tokens = new ArrayList<>();
 
 	@Override
 	public boolean equals(Object obj) {
@@ -72,13 +86,6 @@ public class PlayerGame {
 		getPrimaryKey().setGame(game);
 	}
 
-	public boolean isLogin() {
-		return isLogin;
-	}
-
-	public void setLogin(boolean isLogin) {
-		this.isLogin = isLogin;
-	}
 
 	public PlayerGame(Player player, Game game, boolean isLogin, Color color) {
 		primaryKey.setPlayer(player);

@@ -1,4 +1,4 @@
-package com.huyvu.it.service;
+package com.huyvu.it.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetailsService;

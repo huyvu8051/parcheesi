@@ -1,4 +1,4 @@
-package com.huyvu.it.service;
+package com.huyvu.it.service.impl;
 
 import java.util.List;
 

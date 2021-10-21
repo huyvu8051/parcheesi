@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.corundumstudio.socketio.SocketIOServer;
 import com.huyvu.it.dto.GameDto;
 import com.huyvu.it.models.Player;
-import com.huyvu.it.service.HostService;
-import com.huyvu.it.service.PlayerService;
+import com.huyvu.it.service.impl.HostService;
+import com.huyvu.it.service.impl.PlayerService;
 
 @RestController
 public class PlayerController {
