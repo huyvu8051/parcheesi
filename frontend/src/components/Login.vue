@@ -30,9 +30,6 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <a href="/oauth2/authorization/facebook"
-            >Login with Facebook</a
-          >
           <v-btn color="primary" @click="login">Login</v-btn>
         </v-card-actions>
       </v-card>
@@ -58,7 +55,7 @@ export default {
         console.log("response==========", response);
         this.$store.dispatch("setToken", "Bearer " + response.data.token);
         this.$store.dispatch("setUsername", response.data.username);
-        this.$store.dispatch("setRoles", response.data.roles);
+        this.$store.dispatch("setRoles", response.data.roles); 
 
         console.log(this.$store.state.token);
         console.log(this.$store.state.isUserLoggedIn);
