@@ -424,7 +424,7 @@ public class GameServiceImpl implements GameService {
 	 */
 	private PlayerGame findPlayerGameByColor(List<PlayerGame> playerGames, Color color) {
 		Optional<PlayerGame> optional = playerGames.stream().filter(e -> e.getColor().equals(color)).findFirst();
-		return optional.orElseThrow();
+		return optional.get();
 	}
 
 	/**
@@ -455,7 +455,7 @@ public class GameServiceImpl implements GameService {
 
 		Optional<PlayerGame> optional = playerGame.get().findFirst();
 
-		Game game = optional.orElseThrow().getGame();
+		Game game = optional.get().getGame();
 
 		if (game.isDiced()) {
 			throw new Exception("Not turn to dice!");

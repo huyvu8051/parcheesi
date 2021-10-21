@@ -1,17 +1,11 @@
 package com.huyvu.it.config;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
-import com.huyvu.it.models.Game;
 import com.huyvu.it.models.Player;
-import com.huyvu.it.models.PlayerGame;
-import com.huyvu.it.models.Status;
 import com.huyvu.it.repository.GameRepository;
 import com.huyvu.it.repository.PlayerGameRepository;
 import com.huyvu.it.repository.PlayerRepository;
