@@ -12,19 +12,17 @@ export default new Vuex.Store({
 	state: {
 		token: null,
 		username: null,
-		roles: null,
 		isUserLoggedIn: false,
 	},
 	mutations: {
 		setToken(state, token) {
 			state.token = token
-			state.isUserLoggedIn = state.signature = !!(token)
 		},
 		setUsername(state, username) {
 			state.username = username
 		},
-		setRoles(state, roles) {
-			state.roles = roles
+		setUserLogin(state, isUserLoggedIn) {
+			state.isUserLoggedIn = isUserLoggedIn
 		}
 	},
 	actions: {
@@ -34,8 +32,8 @@ export default new Vuex.Store({
 		setUsername({ commit }, username) {
 			commit('setUsername', username)
 		},
-		setRoles({ commit }, roles) {
-			commit('setRoles', roles)
+		setUserLogin({ commit }, isLogin) {
+			commit('setUserLogin', isLogin)
 		}
 	}
 })

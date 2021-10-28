@@ -15,6 +15,9 @@ public class PlayerGameConverter {
 	@Autowired
 	private PlayerConverter playerConverter; 
 	
+	@Autowired
+	private GameConverter gameConverter;
+	
 	public PlayerGameDto toDto(PlayerGame entity) {
 		PlayerGameDto dto = new PlayerGameDto();
 		dto.setColor(entity.getColor());

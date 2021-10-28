@@ -1,17 +1,12 @@
 package com.huyvu.it.config;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import com.huyvu.it.models.Game;
 import com.huyvu.it.models.Player;
-import com.huyvu.it.models.PlayerGame;
-import com.huyvu.it.models.Status;
 import com.huyvu.it.repository.GameRepository;
 import com.huyvu.it.repository.PlayerGameRepository;
 import com.huyvu.it.repository.PlayerRepository;
@@ -32,17 +27,16 @@ public class DataLoader implements ApplicationRunner {
 	@Autowired
 	private TokenRepository tokenRepository;
 
-
 	public void run(ApplicationArguments args) {
-
 
 		System.out.println("================INIT DB=================");
 
-		Player player1 = playerRepository.save(new Player("huyvu1", "huyvu"));
-		Player player2 = playerRepository.save(new Player("huyvu2", "huyvu"));
-		Player player3 = playerRepository.save(new Player("huyvu3", "huyvu"));
-		Player player4 = playerRepository.save(new Player("huyvu4", "huyvu"));
-		Player player5 = playerRepository.save(new Player("huyvu5", "huyvu"));
+		BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+		Player player1 = playerRepository.save(new Player("huyvu1@gmail.com", bCryptPasswordEncoder.encode("huyvu")));
+		Player player2 = playerRepository.save(new Player("huyvu2@gmail.com", bCryptPasswordEncoder.encode("huyvu")));
+		Player player3 = playerRepository.save(new Player("huyvu3@gmail.com", bCryptPasswordEncoder.encode("huyvu")));
+		Player player4 = playerRepository.save(new Player("huyvu4@gmail.com", bCryptPasswordEncoder.encode("huyvu")));
+		Player player5 = playerRepository.save(new Player("huyvu5@gmail.com", bCryptPasswordEncoder.encode("huyvu")));
 
 //		Game game = gameRepository.save(new Game("Game 1", Status.WAITING, player1));
 //		Game game2 = gameRepository.save(new Game("Game 2", Status.IN_PROGRESS, player2));

@@ -1,9 +1,20 @@
 <template>
   <div class="text-center">
-    <v-menu v-model="menu" :close-on-content-click="false" :nudge-width="200" offset-x>
+    <v-menu
+      v-model="menu"
+      :close-on-content-click="false"
+      :nudge-width="200"
+      offset-x
+    >
       <template v-slot:activator="{ on, attrs }">
-        <v-btn text color="grey" v-if="$store.state.isUserLoggedIn" v-bind="attrs" v-on="on">
-          <span>{{$store.state.username}}</span>
+        <v-btn
+          text
+          color="grey"
+          v-if="$store.state.isUserLoggedIn"
+          v-bind="attrs"
+          v-on="on"
+        >
+          <span>{{ $store.state.username }}</span>
           <v-icon right>account_circle</v-icon>
         </v-btn>
       </template>
@@ -16,7 +27,7 @@
             </v-list-item-avatar>
 
             <v-list-item-content>
-              <v-list-item-title>{{$store.state.username}}</v-list-item-title>
+              <v-list-item-title>{{ $store.state.username }}</v-list-item-title>
               <v-list-item-subtitle>Founder of Vuetify</v-list-item-subtitle>
             </v-list-item-content>
 
@@ -52,7 +63,7 @@
             <span>Sign out</span>
             <v-icon right>logout</v-icon>
           </v-btn>
-         <!--  <v-btn text @click="menu = false">Cancel</v-btn> -->
+          <!--  <v-btn text @click="menu = false">Cancel</v-btn> -->
         </v-card-actions>
       </v-card>
     </v-menu>
@@ -71,6 +82,7 @@ export default {
     logout() {
       this.$store.dispatch("setToken", null);
       this.$store.dispatch("setUsername", null);
+      this.$store.dispatch("setUserLogin", false);
       this.$router.push({
         name: "login"
       });
@@ -79,5 +91,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

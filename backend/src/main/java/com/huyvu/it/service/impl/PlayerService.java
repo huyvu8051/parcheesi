@@ -7,6 +7,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.huyvu.it.converter.GameConverter;
+import com.huyvu.it.converter.PlayerGameConverter;
 import com.huyvu.it.dto.GameDto;
 import com.huyvu.it.models.Color;
 import com.huyvu.it.models.Game;
@@ -26,6 +27,8 @@ public class PlayerService {
 
 	@Autowired
 	private PlayerGameRepository playerGameRepository;
+	@Autowired
+	private PlayerGameConverter playerGameConverter;
 
 	public List<GameDto> findAllGame() {
 		List<Game> games = gameRepository.findAll(Sort.by(Sort.Direction.DESC, "createdDate"));
@@ -39,9 +42,9 @@ public class PlayerService {
 
 		Game game = gameRepository.findOneById(gameDto.getId());
 
-		if (!isPlayerInGame(player, game)
+		if (game.getStatus().equals(Status.CLOSED) || !isPlayerInGame(player, game)
 				&& (!game.getStatus().equals(Status.WAITING) || game.getPlayerGames().size() >= 4)) {
-			throw new Exception("Game not available!");
+			throw new Exception("This room not available!");
 		}
 
 		PlayerGame playerGame = playerGameRepository.save(createNewPlayerInGame(player, game));
@@ -75,4 +78,5 @@ public class PlayerService {
 
 		return players.stream().anyMatch(e -> e.getPlayer().equals(player));
 	}
+
 }

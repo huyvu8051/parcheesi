@@ -1,25 +1,16 @@
 <template>
   <v-app>
-    <Header />
-    <Navigation />
-    <v-main>
-      <v-container fluid fill-height rounded-lg>
-        <router-view></router-view>
-      </v-container>
-    </v-main>
+    <router-view></router-view>
+    <GameNofication />
   </v-app>
 </template>
 
 <script>
-import Footer from "@/components/Footer";
-import Header from "@/components/Header";
-import Navigation from "@/components/Navigation";
+import GameNofication from "@/components/GameNofication";
 export default {
   name: "App",
   components: {
-    Footer: Footer,
-    Header: Header,
-    Navigation: Navigation
+    GameNofication: GameNofication
   }
 };
 </script>

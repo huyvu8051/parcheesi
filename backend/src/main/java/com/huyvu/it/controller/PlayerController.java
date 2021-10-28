@@ -39,7 +39,7 @@ public class PlayerController {
 	}
 
 	@PostMapping("/game")
-	public ResponseEntity<GameDto> createNewGame(@RequestBody GameDto gameDto) {
+	public ResponseEntity<Object> createNewGame(@RequestBody GameDto gameDto) {
 
 		try {
 			Player player = (Player) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -47,7 +47,7 @@ public class PlayerController {
 			return ResponseEntity.ok(
 					hostService.createGame(gameDto, player));
 		} catch (Exception e) {
-			return ResponseEntity.internalServerError().build();
+			return ResponseEntity.badRequest().body(e.getMessage());
 		}
 
 	}
@@ -61,7 +61,7 @@ public class PlayerController {
 			server.getRoomOperations(String.valueOf(response.getId())).sendEvent("join", response);
 			return ResponseEntity.ok(response);
 		} catch (Exception e) {
-			return ResponseEntity.internalServerError().build();
+			return ResponseEntity.badRequest().body(e.getMessage());
 		}
 
 	}

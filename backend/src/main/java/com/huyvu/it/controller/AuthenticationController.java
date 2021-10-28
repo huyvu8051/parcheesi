@@ -5,9 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,17 +25,6 @@ public class AuthenticationController {
 
 	@Autowired
 	private jwtUtil jwtUtil;
-	
-	@GetMapping("/concu")
-	public String concu() {
-		return "concu";
-	}
-
-	@GetMapping("/hello")
-	public String hello() {
-		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		return userDetails.getUsername();
-	}
 
 	@PostMapping("/authentication")
 	public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest request) throws Exception {
@@ -45,7 +32,7 @@ public class AuthenticationController {
 			authenticationManager.authenticate(
 					new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
 		} catch (BadCredentialsException e) {
-			throw new Exception("Username or password uncorrect");
+			return ResponseEntity.badRequest().body("Username or password uncorrect");
 		}
 
 		final UserDetails userDetails = myUserDetailsService.loadUserByUsername(request.getUsername());
@@ -53,5 +40,16 @@ public class AuthenticationController {
 		final String jwt = jwtUtil.generateToken(userDetails);
 
 		return ResponseEntity.ok(new AuthenticationResponse(jwt, userDetails.getUsername()));
+	}
+
+	@PostMapping("/register")
+	public ResponseEntity<?> register(@RequestBody AuthenticationRequest request) throws Exception {
+		try {
+			myUserDetailsService.register(request);
+			return ResponseEntity.ok().body("Register successful!");
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().body(e.getMessage());
+		}
+
 	}
 }

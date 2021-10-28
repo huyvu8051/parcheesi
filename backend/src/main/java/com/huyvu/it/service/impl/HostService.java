@@ -1,7 +1,5 @@
 package com.huyvu.it.service.impl;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +9,6 @@ import com.huyvu.it.models.Color;
 import com.huyvu.it.models.Game;
 import com.huyvu.it.models.Player;
 import com.huyvu.it.models.Status;
-import com.huyvu.it.models.Token;
 import com.huyvu.it.repository.GameRepository;
 import com.huyvu.it.repository.PlayerGameRepository;
 import com.huyvu.it.repository.TokenRepository;

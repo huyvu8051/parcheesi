@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.huyvu.it.models.Game;
+import com.huyvu.it.models.Player;
 import com.huyvu.it.models.PlayerGame;
 
 public interface PlayerGameRepository extends JpaRepository<PlayerGame, Integer> {
@@ -18,6 +19,8 @@ public interface PlayerGameRepository extends JpaRepository<PlayerGame, Integer>
 	List<PlayerGame> findAllByPrimaryKeyGameId(int id);
 
 	List<PlayerGame> findAllByPrimaryKeyGameAndFinishDateIsNull(Game game);
+
+	List<PlayerGame> findAllByPrimaryKeyPlayerOrderByCreatedDateDesc(Player player);
 
 
 }

@@ -1,36 +1,41 @@
-import Vue from 'vue'
-import Router from 'vue-router'
+import Vue from "vue";
+import Router from "vue-router";
 
-import Dice from '@/components/Dice'
-import Parcheesi from '@/components/Parcheesi'
-import Login from '@/components/Login'
-import ListGame from '@/components/ListGame'
+import Parcheesi from "@/components/Parcheesi";
+import Login from "@/components/Login";
+import Signup from "@/components/Signup";
+import ListGame from "@/components/ListGame";
+import Account from "@/components/Account";
 
-
-Vue.use(Router)
+Vue.use(Router);
 
 export default new Router({
-  mode: 'history',
+  mode: "history",
   routes: [
     {
-      path: '/',
+      path: "/",
       name: "login",
       component: Login
-    }
-    ,
-    {
-      path: '/game',
-      name: "game",
-      component: ListGame
     },
     {
-      path: '/dice',
-      component: Dice
+      path: "/signup",
+      name: "signup",
+      component: Signup
+    },
+    {
+      path: "/game",
+      name: "game",
+      component: ListGame
     },
     {
       path: "/parcheesi",
       name: "parcheesi",
       component: Parcheesi
+    },
+    {
+      path: "/account",
+      name: "account",
+      component: Account
     }
   ]
-})
+});
