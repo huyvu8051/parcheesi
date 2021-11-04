@@ -449,7 +449,9 @@ export default {
       }
     ],
     game: {},
-    ratio: 0.5
+    ratio: 0.5,
+    socket:{},
+    socketurl: ""
   }),
   // end data
   async created() {
@@ -457,6 +459,7 @@ export default {
   },
   destroyed() {
     window.removeEventListener("resize", this.resizeWindowEventHandler);
+    this.socket.disconnect();
   },
   mounted() {
     this.start();
@@ -483,10 +486,10 @@ export default {
       console.log(this.ratio);
     },
     connectToSocketIo() {
-      var socketurl = this.$baseurl + ":8082?gameId=";
-      var socket = io.connect(socketurl + this.$route.query.gameId);
+      this.socketurl = this.$baseurl + ":8082?gameId=";
+      this.socket = io.connect(this.socketurl + this.$route.query.gameId);
       var that = this;
-      socket.on("action", function(data) {
+      this.socket.on("action", function(data) {
         that.game = data;
         that.reloadAllToken(data);
         that.players = data.players;
@@ -500,7 +503,7 @@ export default {
         });
       });
 
-      socket.on("startGame", function(data) {
+      this.socket.on("startGame", function(data) {
         that.game = data;
         that.players = data.players;
         that.create();
@@ -509,7 +512,7 @@ export default {
         });
       });
 
-      socket.on("dice", function(data) {
+      this.socket.on("dice", function(data) {
         that.game = data;
         that.$eventBus.$emit("dice", data.diceValue);
         that.reloadAllToken(data);
@@ -520,7 +523,7 @@ export default {
         }, 1000);
       });
 
-      socket.on("join", function(data) {
+      this.socket.on("join", function(data) {
         that.game = data;
         that.$eventBus.$emit("nofication", {
           message:

@@ -24,8 +24,8 @@ public class MessageEventHandler {
 		String gameId = client.getHandshakeData().getSingleUrlParam("gameId");
 		client.joinRoom(gameId);
 		log.info("connect to GameId = " + gameId);
-		client.sendEvent("connect", "concu");
-		server.getRoomOperations("concu").sendEvent("concumessage", "Nguoi theo huong hoa may mu giang loi");
+		client.sendEvent("connect", "connected");
+		server.getRoomOperations("connected").sendEvent("connected", "Nguoi theo huong hoa may mu giang loi");
 	}
 
 
@@ -33,7 +33,7 @@ public class MessageEventHandler {
 	public void ondisconnect(SocketIOClient client) {
 		String gameId = client.getHandshakeData().getSingleUrlParam("gameId");
 		log.info("disconnect to GameId = " + gameId);
-		client.sendEvent("disconnect", "concu");
+		client.sendEvent("disconnect", "disconnected");
 	}
 
 	@OnEvent("messageevent")

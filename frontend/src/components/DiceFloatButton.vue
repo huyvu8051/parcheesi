@@ -3,7 +3,6 @@
     <v-btn
       fab
       dark
-      
       color="primary"
       fixed
       right

@@ -63,9 +63,6 @@ public class GameServiceImpl implements GameService {
 	@Override
 	public GameDto action(TokenDto tokenDto, Player player) throws Exception {
 
-		log.info("+++++++++++++++++++++++++++Start action++++++++++++++++++++++++");
-
-		log.info("************************** tokenRepository.findOneById");
 		Token token = tokenRepository.findOneById(tokenDto.getId());
 
 		PlayerGame playerGame = token.getPlayerGame();
@@ -82,11 +79,10 @@ public class GameServiceImpl implements GameService {
 
 		tryToMove(token, game);
 
-		log.info("************************** tokenRepository.findAllByPlayerGame");
 		List<Token> playerGameTokens = tokenRepository.findAllByPlayerGame(playerGame);
 
 		if (isPlayerFinishGame(playerGameTokens)) {
-			game.setCurrentPlayer(getNextPlayer(game,playerGame));
+			game.setCurrentPlayer(getNextPlayer(game, playerGame));
 			playerGame.setFinishDate(new Date());
 			playerGameRepository.save(playerGame);
 		} else {
@@ -101,14 +97,17 @@ public class GameServiceImpl implements GameService {
 
 		game.setDiced(false);
 
-		log.info("************************** gameRepository.save");
 		Game resultEntity = gameRepository.save(game);
 
 		GameDto resultDto = gameConverter.toDto(resultEntity);
-		log.info("+++++++++++++++++++++++++++End action++++++++++++++++++++++++");
 		return resultDto;
 	}
 
+	/**
+	 * @param token
+	 * @param game
+	 * @throws Exception
+	 */
 	private void tryToMove(Token token, Game game) throws Exception {
 		switch (token.getFieldtype()) {
 		case HOMEPOINT:
@@ -209,7 +208,6 @@ public class GameServiceImpl implements GameService {
 		}
 		PlayerGame playerGame = findPlayerGameByColor(game.getPlayerGames(), game.getCurrentPlayer());
 
-		log.info("************************** tokenRepository.findAllByPlayerGamePrimaryKey");
 		List<Token> tokens = tokenRepository.findAllByPlayerGamePrimaryKey(playerGame.getPrimaryKey());
 
 		boolean result = tokens.stream().anyMatch(e -> e.getFieldtype().equals(FieldType.FINISHPOINT)
@@ -292,8 +290,6 @@ public class GameServiceImpl implements GameService {
 	private void move(Token token, Game game) throws Exception {
 		int desFieldnumber = (token.getFieldNumber() + game.getDiceValue()) % 32;
 
-		log.info(
-				"************************** tokenRepository.findOneByFieldtypeAndFieldNumberAndPlayerGamePrimaryKeyGameId");
 		Token desToken = tokenRepository.findOneByFieldtypeAndFieldNumberAndPlayerGamePrimaryKeyGameId(
 				FieldType.WAYPOINT, desFieldnumber, game.getId());
 
@@ -353,7 +349,6 @@ public class GameServiceImpl implements GameService {
 		}
 
 		PlayerGame playerGame = findPlayerGameByColor(game.getPlayerGames(), game.getCurrentPlayer());
-		log.info("************************** tokenRepository.findAllByPlayerGamePrimaryKeyGameId");
 		List<Token> tokens = tokenRepository.findAllByPlayerGamePrimaryKeyGameId(playerGame.getGame().getId());
 
 		return tokens.stream().anyMatch(e -> e.getFieldtype().equals(FieldType.WAYPOINT)
@@ -367,8 +362,6 @@ public class GameServiceImpl implements GameService {
 	 * @param token destination
 	 */
 	private void strikeIfExistAtDestination(Token token, Game game) {
-		log.info(
-				"************************** tokenRepository.findOneByFieldtypeAndFieldNumberAndPlayerGamePrimaryKeyGameId");
 		Token desToken = tokenRepository.findOneByFieldtypeAndFieldNumberAndPlayerGamePrimaryKeyGameId(
 				FieldType.WAYPOINT, token.getFieldNumber(), game.getId());
 		if (desToken != null) {
@@ -408,8 +401,6 @@ public class GameServiceImpl implements GameService {
 
 		PlayerGame playerGame = findPlayerGameByColor(game.getPlayerGames(), game.getCurrentPlayer());
 
-		log.info("************************** tokenRepository.findAllByPlayerGamePrimaryKey");
-
 		List<Token> tokens = tokenRepository.findAllByPlayerGamePrimaryKey(playerGame.getPrimaryKey());
 
 		boolean result = tokens.stream().anyMatch(e -> e.equals(destination));
@@ -424,7 +415,7 @@ public class GameServiceImpl implements GameService {
 	 */
 	private PlayerGame findPlayerGameByColor(List<PlayerGame> playerGames, Color color) {
 		Optional<PlayerGame> optional = playerGames.stream().filter(e -> e.getColor().equals(color)).findFirst();
-		return optional.orElseThrow();
+		return optional.get();
 	}
 
 	/**
@@ -449,13 +440,12 @@ public class GameServiceImpl implements GameService {
 
 		Pageable limit = PageRequest.of(0, 1);
 
-		log.info("************************** playerGameRepository.findfirstByPlayerIdOrderByCreatedDateDesc");
 		Page<PlayerGame> playerGame = playerGameRepository.findfirstByPlayerIdOrderByCreatedDateDesc(player.getId(),
 				limit);
 
 		Optional<PlayerGame> optional = playerGame.get().findFirst();
 
-		Game game = optional.orElseThrow().getGame();
+		Game game = optional.get().getGame();
 
 		if (game.isDiced()) {
 			throw new Exception("Not turn to dice!");
@@ -472,10 +462,7 @@ public class GameServiceImpl implements GameService {
 			}
 			game.setDiced(false);
 
-			log.info("+++++++++++++++++++++++++++Player cannot take turn++++++++++++++++++++++++");
 		}
-
-		log.info("************************** gameRepository.save");
 		gameRepository.save(game);
 		GameDto result = gameConverter.toDto(game);
 
@@ -489,7 +476,6 @@ public class GameServiceImpl implements GameService {
 	private boolean isAvailableToTakeTurn(Game game) {
 		PlayerGame playerGame = findPlayerGameByColor(game.getPlayerGames(), game.getCurrentPlayer());
 
-		log.info("************************** tokenRepository.findAllByPlayerGamePrimaryKey");
 		List<Token> tokens = tokenRepository.findAllByPlayerGamePrimaryKey(playerGame.getPrimaryKey());
 
 		for (Token token : tokens) {
@@ -497,7 +483,7 @@ public class GameServiceImpl implements GameService {
 				isTokenAbleToMove(game, token);
 				return true;
 			} catch (Exception e) {
-				log.error(e.getMessage() + "=================================");
+				// log.error(e.getMessage() + "=================================");
 			}
 		}
 		return false;
@@ -528,20 +514,14 @@ public class GameServiceImpl implements GameService {
 			break;
 		case WAYPOINT:
 			if (isStandInFinishPointZone(token, game)) {
-				if (destinationIsOutOfRange(game)) {
-					throw new Exception("Destination is out of range!");
-				}
-
 				Token destination = new Token(token.getPlayerGame().getColor(), game.getDiceValue(),
 						FieldType.FINISHPOINT);
 
-				if (anAllyStandInDestination(game, destination)) {
-					throw new Exception("Not available to jump to finish point!");
+				if (destinationIsOutOfRange(game) || anAllyStandInDestination(game, destination)
+						|| anyAllyStandBetweenPosAndDesHomePoint(game, token)) {
+					throw new Exception("Destination is out of range!");
 				}
 
-				if (anyAllyStandBetweenPosAndDesHomePoint(game, token)) {
-					throw new Exception("Finish destination has been block!");
-				}
 				break;
 			}
 			int desFieldnumber = (token.getFieldNumber() + game.getDiceValue()) % 32;
@@ -550,33 +530,16 @@ public class GameServiceImpl implements GameService {
 					FieldType.WAYPOINT, desFieldnumber, game.getId());
 
 			// no ally stand at destination
-			if (desToken != null && anAllyStandInDestination(game, desToken)) {
+			if ((desToken != null && anAllyStandInDestination(game, desToken))
+					|| anyTokenStandBetweenPosAndDes(game, token) || isGoMoreThanOneRound(game, token)) {
 				throw new Exception("Your destination has been block by an ally!");
-			}
-
-			// no Token stand between current position and destination
-			if (anyTokenStandBetweenPosAndDes(game, token)) {
-				throw new Exception("Your way point has been block");
-			}
-
-			// do not go more than one round
-			if (isGoMoreThanOneRound(game, token)) {
-				throw new Exception("Do not go more than one round!");
 			}
 			break;
 		case FINISHPOINT:
-			if (destinationIsOutOfRange(game)) {
-				throw new Exception("Destination is out of range!");
-			}
-
-			if (game.getDiceValue() != token.getFieldNumber() + 1) {
-				throw new Exception("Not valid dice value!");
-			}
-
 			Token destination = new Token(token.getPlayerGame().getColor(), game.getDiceValue(), FieldType.FINISHPOINT);
-
-			if (anAllyStandInDestination(game, destination)) {
-				throw new Exception("Not available to jump to finish point!");
+			if (destinationIsOutOfRange(game) || (game.getDiceValue() != token.getFieldNumber() + 1)
+					|| anAllyStandInDestination(game, destination)) {
+				throw new Exception();
 			}
 			break;
 
@@ -665,4 +628,3 @@ public class GameServiceImpl implements GameService {
 	}
 
 }
-

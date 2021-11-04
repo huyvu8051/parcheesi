@@ -35,7 +35,7 @@
           </v-form>
         </v-card-text>
         <v-card-actions>
-          <a href="/forgot-password">Forgot password?</a>
+          <!-- <a href="/forgot-password">Forgot password?</a> -->
           <v-spacer />
           <v-btn color="primary" :to="{ name: 'signup' }">Sign Up</v-btn>
           <v-btn color="green" @click="submit" class="white--text">Login</v-btn>
